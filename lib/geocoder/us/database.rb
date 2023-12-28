@@ -8,8 +8,8 @@ require 'pp'
 require 'time'
 require 'thread'
 
-require 'geocoder/us/address'
-require 'geocoder/us/metaphone'
+require_relative './address'
+require_relative './metaphone'
 
 module Geocoder
 end
@@ -205,11 +205,16 @@ module Geocoder::US
     # building number, street name, and list of candidate ZIP codes.
     # The metaphone and ZIP code indexes on the feature table are
     # used to match results.
-    def features_by_street_and_zip (street, tokens, zips)
+    def features_by_street_and_zip (street, tokens, zips, address)
+
+      $stderr.puts "__ features_by_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
+
       sql, params = features_by_street(street, tokens)
       in_list = placeholders_for zips
       sql    += " AND feature.zip IN (#{in_list})"
       params += zips
+
+      # $stderr.puts "__ features_by_street_and_zip: 2: #{sql.inspect} | #{params.inspect} "
       execute sql, *params
     end
 
@@ -217,7 +222,7 @@ module Geocoder::US
     # building number, street name, and list of candidate ZIP codes.
     # The ZIP codes are reduced to a set of 3-digit prefixes, broadening
     # the search area.
-    def more_features_by_street_and_zip (street, tokens, zips)
+    def more_features_by_street_and_zip (street, tokens, zips, address)
       sql, params = features_by_street(street, tokens)
       if !zips.empty? and !zips[0].nil?
         #puts "zip results 2"
@@ -226,6 +231,7 @@ module Geocoder::US
         sql += " AND (#{like_list})"
         params += zip3s
       end
+      $stderr.puts "__ more_features_by_street_and_zip: #{params.inspect}"
       execute sql, *params
     end
 
@@ -246,6 +252,7 @@ module Geocoder::US
           ORDER BY min(abs(fromhn - ?), abs(tohn - ?))
           LIMIT #{limit};"
       params += [number, number]
+      # $stderr.puts "__ ranges_by_feature #{sql} #{params.inspect}"
       execute sql, *params
     end
 
@@ -253,6 +260,7 @@ module Geocoder::US
     def edges (edge_ids)
       in_list = placeholders_for edge_ids
       sql = "SELECT edge.* FROM edge WHERE edge.tlid IN (#{in_list})"
+      # $stderr.puts "__ edges #{sql} #{edge_ids.inspect}"
       execute sql, *edge_ids
     end
 
@@ -266,6 +274,7 @@ module Geocoder::US
                     min(tohn)   AS from1, max(fromhn) AS to1
               FROM range WHERE tlid IN (#{in_list})
               GROUP BY tlid, side;"
+      # $stderr.puts "__ range_ends #{sql} #{edge_ids.inspect}"
       execute(sql, *edge_ids).map {|r|
 	if r[:flipped].to_i == 1
           r[:flipped] = true
@@ -309,6 +318,7 @@ module Geocoder::US
               AND f1.fid = a.fid AND f2.fid = b.fid
               AND f1.zip = f2.zip
               AND f1.paflag = 'P' AND f2.paflag = 'P';"
+      # $stderr.puts "__ intersections_by_fid #{sql}"
         return execute sql
       ensure
         # flush_statements # the CREATE/DROP TABLE invalidates prepared statements
@@ -323,6 +333,7 @@ module Geocoder::US
     def primary_places (zips)
       in_list = placeholders_for zips
       sql = "SELECT * FROM place WHERE zip IN (#{in_list}) order by priority desc;"
+      # $stderr.puts "__ primary_places #{sql} #{zips.inspect}"
       execute sql, *zips
     end
 
@@ -362,7 +373,11 @@ module Geocoder::US
       if(!address.zip.empty? && !address.zip.nil?)
          places = places_by_zip city, address.zip 
       end
+
+      # $stderr.puts "__ find_candidates: city: #{city.inspect} | #{address.city_parts.inspect} | #{address.state.inspect}"
       places = places_by_city city, address.city_parts, address.state if places.empty?
+      # $stderr.puts "__ find_candidates: 1 places: #{places}"
+      $stderr.puts "__ find_candidates: 1 places: #{places.length}"
       return [] if places.empty?
 
       # setting city will remove city from street, so save off before
@@ -370,14 +385,35 @@ module Geocoder::US
       return places if address.street.empty?
       
       zips = unique_values places, :zip
+
+      $stderr.puts "__ find_candidates: zips: #{zips}"
       street = address.street.sort {|a,b|a.length <=> b.length}[0]
-      candidates = features_by_street_and_zip street, address.street_parts, zips
+      candidates = features_by_street_and_zip street, address.street_parts, zips, address
+
+      $stderr.puts "__ find_candidates: 2.1 candidates: #{candidates.length}"
+
+#################################################################################################################
+      if candidates.empty?
+        
+        tokens = address.street_parts_with_some_noise
+
+        # if address.text.downcase.include? "Point Fosdick".downcase 
+        #   tokens.push("point Fosdick".downcase)
+        # end
+        
+        $stderr.puts "__ find_candidates: 2.1.1 tokens with noise: #{tokens.inspect}"
+        candidates = features_by_street_and_zip street, tokens, zips, address
+        $stderr.puts "__ find_candidates: 2.1.1 expanded tokens candidates: #{candidates.length}"
+      end
+#################################################################################################################
 
       if candidates.empty?
-        candidates = more_features_by_street_and_zip street, address.street_parts, zips
+        candidates = more_features_by_street_and_zip street, address.street_parts, zips, address
+        $stderr.puts "__ find_candidates: 2.2 more candidates: #{candidates.length}"
       end
 
       merge_rows! candidates, places, :zip
+      $stderr.puts "__ find_candidates: 3 merged candidates and places by zip: #{candidates.length}"
       candidates
     end
 
@@ -626,6 +662,9 @@ module Geocoder::US
     # values with empty strings, and deleting artifacts from database
     # queries.
     def clean_record! (record)
+      
+      # $stderr.puts "__ clean_record: #{record.inspect}"
+
       record[:score] = format("%.3f", record[:score]).to_f \
         unless record[:score].nil?
       record.keys.each {|k| record[k] = "" if record[k].nil? } # clean up nils
@@ -772,20 +811,28 @@ module Geocoder::US
     #   components of the address and place name.
     def geocode (info_to_geocode, canonical_place=false)
       address = Address.new info_to_geocode
-      $stderr.print "ADDR: #{address.inspect}\n" if @debug
+      # open('../../../aa.out', 'a') { |f|
+      #   f.puts "ADDR: #{address.inspect}"
+      # }
+      $stderr.print "\nADDR: #{address.inspect}\n" 
+      $stderr.print "__ ADDR: #{address.inspect}\n" if @debug
       return [] if address.city.empty? and address.zip.empty?
       results = []
       start_time = Time.now if @debug
       if address.po_box? and !address.zip.empty?
+        $stderr.puts "\n1\n"
         results = geocode_place address, canonical_place
       end
       if address.intersection? and !address.street.empty? and address.number.empty?
+        $stderr.puts "\n2\n"
         results = geocode_intersection address, canonical_place
       end
       if results.empty? and !address.street.empty?
+        $stderr.puts "\n3\n"
         results = geocode_address address, canonical_place
       end
       if results.empty?
+        $stderr.puts "\n4\n"
         results = geocode_place address, canonical_place
       end
       if @debug

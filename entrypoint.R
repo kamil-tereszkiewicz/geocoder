@@ -40,14 +40,36 @@ out_template <- tibble(
   fips_county = NA, number = NA, prenum = NA
 )
 
+stderrCnt <<- -1
+incCnt <- function() {
+  t <- sprintf("incrementing from: %d", stderrCnt)
+  stderrCnt <<- stderrCnt + 1
+  
+  t <- sprintf("%s to: %d",t , stderrCnt)
+  print(t)
+
+  stderrCnt 
+}
+
+incCnt()
+# print(incCnt())
+
 ## geocode
 cli::cli_alert_info("now geocoding ...", wrap = TRUE)
 geocode <- function(addr_string) {
   stopifnot(class(addr_string) == "character")
 
+  l_stderrCnt <- incCnt() 
+  print(l_stderrCnt)
+  stderrFn <- sprintf("geoLog%d.log", l_stderrCnt)
+  cli::cli_alert_info(sprintf("%d. sterr fn: %s",l_stderrCnt, stderrFn), wrap = TRUE)
+
   out <- system2("ruby",
     args = c("/app/geocode.rb", shQuote(addr_string)),
-    stderr = FALSE, stdout = TRUE
+    # stderr = FALSE,
+    stderr = stderrFn,
+    # stderr = TRUE,
+    stdout = TRUE
   )
 
   if (length(out) > 0) {
@@ -68,8 +90,10 @@ geocode <- function(addr_string) {
 if (nrow(d_for_geocoding) > 0) {
   d_for_geocoding$geocodes <- mappp::mappp(d_for_geocoding$address,
                                            geocode,
-                                           parallel = TRUE,
-                                           cache = TRUE,
+                                          #  parallel = TRUE,
+                                           parallel = !TRUE,
+                                          #  cache = TRUE,
+                                           cache = !TRUE,
                                            cache_name = "geocoding_cache"
   )
   

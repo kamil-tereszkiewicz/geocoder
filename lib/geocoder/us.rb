@@ -1,12 +1,12 @@
-require "geocoder/us/database"
-require "geocoder/us/address"
+require_relative "./us/database"
+require_relative "./us/address"
 
 # Imports the Geocoder::US::Database and Geocoder::US::Address
 # modules.
 #
 # General usage is as follows:
 #
-#  >> require 'geocoder/us'
+#  >> require_relative './lib/geocoder/us'
 #  >> db = Geocoder::US::Database.new("/opt/tiger/geocoder.db")
 #  >> p db.geocode("1600 Pennsylvania Av, Washington DC")
 #
