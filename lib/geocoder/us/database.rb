@@ -132,6 +132,9 @@ module Geocoder::US
     # Execute an SQL statement, bind a list of parameters, and
     # return the result as a list of hashes.
     def execute (sql, *params)
+
+      $stderr.puts " __execute:\n  #{sql.inspect}\n  #{params.inspect}"
+
       st = prepare(sql) 
       begin
         execute_statement st, *params
@@ -183,9 +186,26 @@ module Geocoder::US
         args = [city] + tokens.clone + [state]
       end
       metaphones = metaphone_placeholders_for tokens
+
+      printMetaphones "city", tokens
+
+      # $stderr.puts "places_by_city: city: #{city} metaphones tokens: #{tokens}, state_arg: #{state}, args: #{args}\n    #{sql}"
+      
       execute("SELECT *, levenshtein(?, city) AS city_score
                 FROM place WHERE city_phone IN (#{metaphones}) #{and_state} order by priority desc;", *args)
     end
+
+
+      # #################################### kt
+      def printMetaphones (label, params)
+      #  (["metaphone(?,5)"] * list.length).join(",")
+
+        metaphones = params.map.with_index{|_,i| " metaphone(?,5) t_" + i.to_s }.join ","
+        sqlM = "select #{metaphones};"
+
+        rowsM = execute sqlM, *params
+        $stderr.puts " __ metaphones: #{label}: \n  #{params.inspect}\n  #{rowsM.inspect}"
+      end
 
     # Generate an SQL query and set of parameters against the feature and range
     # tables for a street name and optional building number. The SQL is
@@ -193,6 +213,9 @@ module Geocoder::US
     # by ZIP code.
     def features_by_street (street, tokens)
       metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
+
+      printMetaphones "street", tokens
+
       sql = "
         SELECT feature.*, levenshtein(?, street) AS street_score
           FROM feature
@@ -214,7 +237,6 @@ module Geocoder::US
       sql    += " AND feature.zip IN (#{in_list})"
       params += zips
 
-      # $stderr.puts "__ features_by_street_and_zip: 2: #{sql.inspect} | #{params.inspect} "
       execute sql, *params
     end
 
@@ -231,7 +253,7 @@ module Geocoder::US
         sql += " AND (#{like_list})"
         params += zip3s
       end
-      $stderr.puts "__ more_features_by_street_and_zip: #{params.inspect}"
+      $stderr.puts "__ more_features_by_street_and_zip:"
       execute sql, *params
     end
 
@@ -252,7 +274,7 @@ module Geocoder::US
           ORDER BY min(abs(fromhn - ?), abs(tohn - ?))
           LIMIT #{limit};"
       params += [number, number]
-      # $stderr.puts "__ ranges_by_feature #{sql} #{params.inspect}"
+      $stderr.puts "__ ranges_by_feature:"
       execute sql, *params
     end
 
@@ -260,7 +282,7 @@ module Geocoder::US
     def edges (edge_ids)
       in_list = placeholders_for edge_ids
       sql = "SELECT edge.* FROM edge WHERE edge.tlid IN (#{in_list})"
-      # $stderr.puts "__ edges #{sql} #{edge_ids.inspect}"
+      $stderr.puts "__ edges"
       execute sql, *edge_ids
     end
 
@@ -274,7 +296,7 @@ module Geocoder::US
                     min(tohn)   AS from1, max(fromhn) AS to1
               FROM range WHERE tlid IN (#{in_list})
               GROUP BY tlid, side;"
-      # $stderr.puts "__ range_ends #{sql} #{edge_ids.inspect}"
+      $stderr.puts "__ range_ends"
       execute(sql, *edge_ids).map {|r|
 	if r[:flipped].to_i == 1
           r[:flipped] = true
@@ -318,7 +340,7 @@ module Geocoder::US
               AND f1.fid = a.fid AND f2.fid = b.fid
               AND f1.zip = f2.zip
               AND f1.paflag = 'P' AND f2.paflag = 'P';"
-      # $stderr.puts "__ intersections_by_fid #{sql}"
+      $stderr.puts "__ intersections_by_fid"
         return execute sql
       ensure
         # flush_statements # the CREATE/DROP TABLE invalidates prepared statements
@@ -333,7 +355,7 @@ module Geocoder::US
     def primary_places (zips)
       in_list = placeholders_for zips
       sql = "SELECT * FROM place WHERE zip IN (#{in_list}) order by priority desc;"
-      # $stderr.puts "__ primary_places #{sql} #{zips.inspect}"
+      $stderr.puts "__ primary_places"
       execute sql, *zips
     end
 
@@ -374,7 +396,7 @@ module Geocoder::US
          places = places_by_zip city, address.zip 
       end
 
-      # $stderr.puts "__ find_candidates: city: #{city.inspect} | #{address.city_parts.inspect} | #{address.state.inspect}"
+      $stderr.puts "__ find_candidates: places_by_city: city: #{city.inspect} | #{address.city_parts.inspect} | #{address.state.inspect}"
       places = places_by_city city, address.city_parts, address.state if places.empty?
       # $stderr.puts "__ find_candidates: 1 places: #{places}"
       $stderr.puts "__ find_candidates: 1 places: #{places.length}"
@@ -391,25 +413,33 @@ module Geocoder::US
       candidates = features_by_street_and_zip street, address.street_parts, zips, address
 
       $stderr.puts "__ find_candidates: 2.1 candidates: #{candidates.length}"
+      $stderr.puts "__ find_candidates: 2.1 candidates: #{candidates.inspect}"
 
-#################################################################################################################
-      if candidates.empty?
+##############################################################################################################
+      if false and candidates.empty?
         
         tokens = address.street_parts_with_some_noise
 
-        # if address.text.downcase.include? "Point Fosdick".downcase 
-        #   tokens.push("point Fosdick".downcase)
-        # end
-        
-        $stderr.puts "__ find_candidates: 2.1.1 tokens with noise: #{tokens.inspect}"
+        $stderr.puts "__ find_candidates: 2.1.1 tokens with NOISE with abbr: #{tokens.inspect}"
         candidates = features_by_street_and_zip street, tokens, zips, address
-        $stderr.puts "__ find_candidates: 2.1.1 expanded tokens candidates: #{candidates.length}"
+
+        $stderr.puts "__ find_candidates: 2.1.1 EXPANDED TOKENS candidates: #{candidates.length}"
+        $stderr.puts "__ find_candidates: 2.1.1 EXPANDED TOKENS candidates: #{candidates.inspect}"
       end
-#################################################################################################################
+##############################################################################################################
+############################################################################################################## 2
+      if candidates.empty?
+        tokens = address.street_parts_with_some_noise
+        $stderr.puts "__ find_candidates: 2.1.2 tokens with NOISE with full words: #{tokens.inspect}"
+        candidates = features_by_street_and_zip street, tokens, zips, address
+        $stderr.puts "__ find_candidates: 2.1.2 EXPANDED TOKENS candidates: #{candidates.length}"
+        $stderr.puts "__ find_candidates: 2.1.2 EXPANDED TOKENS candidates: #{candidates.inspect}"
+      end
+##############################################################################################################
 
       if candidates.empty?
         candidates = more_features_by_street_and_zip street, address.street_parts, zips, address
-        $stderr.puts "__ find_candidates: 2.2 more candidates: #{candidates.length}"
+        $stderr.puts "__ find_candidates: 2.2 more candidates relaxed zip: #{candidates.length}"
       end
 
       merge_rows! candidates, places, :zip
@@ -814,25 +844,24 @@ module Geocoder::US
       # open('../../../aa.out', 'a') { |f|
       #   f.puts "ADDR: #{address.inspect}"
       # }
-      $stderr.print "\nADDR: #{address.inspect}\n" 
-      $stderr.print "__ ADDR: #{address.inspect}\n" if @debug
+      $stderr.print "__ ADDR: #{address.inspect}\n" 
       return [] if address.city.empty? and address.zip.empty?
       results = []
       start_time = Time.now if @debug
       if address.po_box? and !address.zip.empty?
-        $stderr.puts "\n1\n"
+        $stderr.puts "1 - po_box"
         results = geocode_place address, canonical_place
       end
       if address.intersection? and !address.street.empty? and address.number.empty?
-        $stderr.puts "\n2\n"
+        $stderr.puts "2 - intersection"
         results = geocode_intersection address, canonical_place
       end
       if results.empty? and !address.street.empty?
-        $stderr.puts "\n3\n"
+        $stderr.puts "3 address"
         results = geocode_address address, canonical_place
       end
       if results.empty?
-        $stderr.puts "\n4\n"
+        $stderr.puts "4 place"
         results = geocode_place address, canonical_place
       end
       if @debug

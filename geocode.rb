@@ -2,10 +2,11 @@ require 'rubygems'
 require_relative './lib/geocoder/us'
 require 'json'
 
-db = Geocoder::US::Database.new("/data/geocoder-gb-1-2023-07-13-1/geocoder.db")
+dbPath = "/data/geocoder-gb-1-2023-07-13-1/geocoder_kt.db"
+db = Geocoder::US::Database.new(dbPath)
 
 addr = ARGV[0]
-$stderr.puts "addr: #{addr}"
+$stderr.puts " __ addr: #{addr}"
 
 out = db.geocode(ARGV[0])
 

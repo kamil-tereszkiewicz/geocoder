@@ -42,11 +42,11 @@ out_template <- tibble(
 
 stderrCnt <<- -1
 incCnt <- function() {
-  t <- sprintf("incrementing from: %d", stderrCnt)
+  # t <- sprintf("incrementing from: %d", stderrCnt)
   stderrCnt <<- stderrCnt + 1
   
-  t <- sprintf("%s to: %d",t , stderrCnt)
-  print(t)
+  # t <- sprintf("%s to: %d",t , stderrCnt)
+  # print(t)
 
   stderrCnt 
 }
@@ -60,9 +60,9 @@ geocode <- function(addr_string) {
   stopifnot(class(addr_string) == "character")
 
   l_stderrCnt <- incCnt() 
-  print(l_stderrCnt)
+  # print(l_stderrCnt)
   stderrFn <- sprintf("geoLog%d.log", l_stderrCnt)
-  cli::cli_alert_info(sprintf("%d. sterr fn: %s",l_stderrCnt, stderrFn), wrap = TRUE)
+  # cli::cli_alert_info(sprintf("%d. sterr fn: %s",l_stderrCnt, stderrFn), wrap = TRUE)
 
   out <- system2("ruby",
     args = c("/app/geocode.rb", shQuote(addr_string)),

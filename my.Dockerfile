@@ -54,8 +54,10 @@ WORKDIR /app
 # RUN R --quiet -e "renv::restore()"
 
 COPY geocode.rb .
+COPY update_t.rb .
 COPY entrypoint.R .
 
 WORKDIR /tmp
 
 ENTRYPOINT ["/app/entrypoint.R"]
+# ENTRYPOINT ["ruby", "/app/update_t.rb"]

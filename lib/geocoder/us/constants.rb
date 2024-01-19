@@ -31,7 +31,8 @@ module Geocoder::US
       }
     end
     def build_match_words
-      str = '\b(' + [values].flatten.join("|") + ')\b'
+      # str = '\b(' + [values].flatten.join("|") + ')\b'
+      str = '\b(' + [keys].flatten.join("|") + ')\b'
       @regexp_words  = Regexp.new(str, Regexp::IGNORECASE)
 
       # $stderr.puts "build_match_words: #{@regexp_words.inspect}"
