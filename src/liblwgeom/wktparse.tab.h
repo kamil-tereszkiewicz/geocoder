@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_LWG_PARSE_YY_Y_TAB_H_INCLUDED
 # define YY_LWG_PARSE_YY_Y_TAB_H_INCLUDED
@@ -44,47 +45,56 @@
 extern int lwg_parse_yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    POINT = 258,
-    LINESTRING = 259,
-    POLYGON = 260,
-    MULTIPOINT = 261,
-    MULTILINESTRING = 262,
-    MULTIPOLYGON = 263,
-    GEOMETRYCOLLECTION = 264,
-    CIRCULARSTRING = 265,
-    COMPOUNDCURVE = 266,
-    CURVEPOLYGON = 267,
-    MULTICURVE = 268,
-    MULTISURFACE = 269,
-    POINTM = 270,
-    LINESTRINGM = 271,
-    POLYGONM = 272,
-    MULTIPOINTM = 273,
-    MULTILINESTRINGM = 274,
-    MULTIPOLYGONM = 275,
-    GEOMETRYCOLLECTIONM = 276,
-    CIRCULARSTRINGM = 277,
-    COMPOUNDCURVEM = 278,
-    CURVEPOLYGONM = 279,
-    MULTICURVEM = 280,
-    MULTISURFACEM = 281,
-    SRID = 282,
-    EMPTY = 283,
-    VALUE = 284,
-    LPAREN = 285,
-    RPAREN = 286,
-    COMMA = 287,
-    EQUALS = 288,
-    SEMICOLON = 289,
-    WKB = 290
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    POINT = 258,                   /* POINT  */
+    LINESTRING = 259,              /* LINESTRING  */
+    POLYGON = 260,                 /* POLYGON  */
+    MULTIPOINT = 261,              /* MULTIPOINT  */
+    MULTILINESTRING = 262,         /* MULTILINESTRING  */
+    MULTIPOLYGON = 263,            /* MULTIPOLYGON  */
+    GEOMETRYCOLLECTION = 264,      /* GEOMETRYCOLLECTION  */
+    CIRCULARSTRING = 265,          /* CIRCULARSTRING  */
+    COMPOUNDCURVE = 266,           /* COMPOUNDCURVE  */
+    CURVEPOLYGON = 267,            /* CURVEPOLYGON  */
+    MULTICURVE = 268,              /* MULTICURVE  */
+    MULTISURFACE = 269,            /* MULTISURFACE  */
+    POINTM = 270,                  /* POINTM  */
+    LINESTRINGM = 271,             /* LINESTRINGM  */
+    POLYGONM = 272,                /* POLYGONM  */
+    MULTIPOINTM = 273,             /* MULTIPOINTM  */
+    MULTILINESTRINGM = 274,        /* MULTILINESTRINGM  */
+    MULTIPOLYGONM = 275,           /* MULTIPOLYGONM  */
+    GEOMETRYCOLLECTIONM = 276,     /* GEOMETRYCOLLECTIONM  */
+    CIRCULARSTRINGM = 277,         /* CIRCULARSTRINGM  */
+    COMPOUNDCURVEM = 278,          /* COMPOUNDCURVEM  */
+    CURVEPOLYGONM = 279,           /* CURVEPOLYGONM  */
+    MULTICURVEM = 280,             /* MULTICURVEM  */
+    MULTISURFACEM = 281,           /* MULTISURFACEM  */
+    SRID = 282,                    /* SRID  */
+    EMPTY = 283,                   /* EMPTY  */
+    VALUE = 284,                   /* VALUE  */
+    LPAREN = 285,                  /* LPAREN  */
+    RPAREN = 286,                  /* RPAREN  */
+    COMMA = 287,                   /* COMMA  */
+    EQUALS = 288,                  /* EQUALS  */
+    SEMICOLON = 289,               /* SEMICOLON  */
+    WKB = 290                      /* WKB  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
 #define POINT 258
 #define LINESTRING 259
 #define POLYGON 260
@@ -128,7 +138,7 @@ union YYSTYPE
 	double value;
 	const char* wkb;
 
-#line 132 "y.tab.h"
+#line 142 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -153,6 +163,8 @@ struct YYLTYPE
 
 extern YYSTYPE lwg_parse_yylval;
 extern YYLTYPE lwg_parse_yylloc;
+
 int lwg_parse_yyparse (void);
+
 
 #endif /* !YY_LWG_PARSE_YY_Y_TAB_H_INCLUDED  */

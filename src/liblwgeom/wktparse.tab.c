@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -34,6 +34,10 @@
 /* C LALR(1) parser skeleton written by Richard Stallman, by
    simplifying the original so-called "semantic" parser.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 /* All symbols defined below should begin with yy or YY, to avoid
    infringing on user name space.  This should be done even for local
    variables, as they might otherwise be expanded by user macros.
@@ -41,14 +45,11 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* Identify Bison output, and Bison version.  */
+#define YYBISON 30802
 
-/* Identify Bison output.  */
-#define YYBISON 1
-
-/* Bison version.  */
-#define YYBISON_VERSION "3.5.1"
+/* Bison version string.  */
+#define YYBISON_VERSION "3.8.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -83,7 +84,7 @@
 void set_zm(char z, char m);
 int lwg_parse_yylex(void);
 
-#line 87 "y.tab.c"
+#line 88 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -106,14 +107,6 @@ int lwg_parse_yylex(void);
 #  endif
 # endif
 
-/* Enabling verbose error messages.  */
-#ifdef YYERROR_VERBOSE
-# undef YYERROR_VERBOSE
-# define YYERROR_VERBOSE 1
-#else
-# define YYERROR_VERBOSE 0
-#endif
-
 /* Use api.header.include to #include this header
    instead of duplicating it here.  */
 #ifndef YY_LWG_PARSE_YY_Y_TAB_H_INCLUDED
@@ -126,47 +119,56 @@ int lwg_parse_yylex(void);
 extern int lwg_parse_yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    POINT = 258,
-    LINESTRING = 259,
-    POLYGON = 260,
-    MULTIPOINT = 261,
-    MULTILINESTRING = 262,
-    MULTIPOLYGON = 263,
-    GEOMETRYCOLLECTION = 264,
-    CIRCULARSTRING = 265,
-    COMPOUNDCURVE = 266,
-    CURVEPOLYGON = 267,
-    MULTICURVE = 268,
-    MULTISURFACE = 269,
-    POINTM = 270,
-    LINESTRINGM = 271,
-    POLYGONM = 272,
-    MULTIPOINTM = 273,
-    MULTILINESTRINGM = 274,
-    MULTIPOLYGONM = 275,
-    GEOMETRYCOLLECTIONM = 276,
-    CIRCULARSTRINGM = 277,
-    COMPOUNDCURVEM = 278,
-    CURVEPOLYGONM = 279,
-    MULTICURVEM = 280,
-    MULTISURFACEM = 281,
-    SRID = 282,
-    EMPTY = 283,
-    VALUE = 284,
-    LPAREN = 285,
-    RPAREN = 286,
-    COMMA = 287,
-    EQUALS = 288,
-    SEMICOLON = 289,
-    WKB = 290
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    POINT = 258,                   /* POINT  */
+    LINESTRING = 259,              /* LINESTRING  */
+    POLYGON = 260,                 /* POLYGON  */
+    MULTIPOINT = 261,              /* MULTIPOINT  */
+    MULTILINESTRING = 262,         /* MULTILINESTRING  */
+    MULTIPOLYGON = 263,            /* MULTIPOLYGON  */
+    GEOMETRYCOLLECTION = 264,      /* GEOMETRYCOLLECTION  */
+    CIRCULARSTRING = 265,          /* CIRCULARSTRING  */
+    COMPOUNDCURVE = 266,           /* COMPOUNDCURVE  */
+    CURVEPOLYGON = 267,            /* CURVEPOLYGON  */
+    MULTICURVE = 268,              /* MULTICURVE  */
+    MULTISURFACE = 269,            /* MULTISURFACE  */
+    POINTM = 270,                  /* POINTM  */
+    LINESTRINGM = 271,             /* LINESTRINGM  */
+    POLYGONM = 272,                /* POLYGONM  */
+    MULTIPOINTM = 273,             /* MULTIPOINTM  */
+    MULTILINESTRINGM = 274,        /* MULTILINESTRINGM  */
+    MULTIPOLYGONM = 275,           /* MULTIPOLYGONM  */
+    GEOMETRYCOLLECTIONM = 276,     /* GEOMETRYCOLLECTIONM  */
+    CIRCULARSTRINGM = 277,         /* CIRCULARSTRINGM  */
+    COMPOUNDCURVEM = 278,          /* COMPOUNDCURVEM  */
+    CURVEPOLYGONM = 279,           /* CURVEPOLYGONM  */
+    MULTICURVEM = 280,             /* MULTICURVEM  */
+    MULTISURFACEM = 281,           /* MULTISURFACEM  */
+    SRID = 282,                    /* SRID  */
+    EMPTY = 283,                   /* EMPTY  */
+    VALUE = 284,                   /* VALUE  */
+    LPAREN = 285,                  /* LPAREN  */
+    RPAREN = 286,                  /* RPAREN  */
+    COMMA = 287,                   /* COMMA  */
+    EQUALS = 288,                  /* EQUALS  */
+    SEMICOLON = 289,               /* SEMICOLON  */
+    WKB = 290                      /* WKB  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
 #define POINT 258
 #define LINESTRING 259
 #define POLYGON 260
@@ -210,7 +212,7 @@ union YYSTYPE
 	double value;
 	const char* wkb;
 
-#line 214 "y.tab.c"
+#line 216 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -235,9 +237,161 @@ struct YYLTYPE
 
 extern YYSTYPE lwg_parse_yylval;
 extern YYLTYPE lwg_parse_yylloc;
+
 int lwg_parse_yyparse (void);
 
+
 #endif /* !YY_LWG_PARSE_YY_Y_TAB_H_INCLUDED  */
+/* Symbol kind.  */
+enum yysymbol_kind_t
+{
+  YYSYMBOL_YYEMPTY = -2,
+  YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
+  YYSYMBOL_YYerror = 1,                    /* error  */
+  YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
+  YYSYMBOL_POINT = 3,                      /* POINT  */
+  YYSYMBOL_LINESTRING = 4,                 /* LINESTRING  */
+  YYSYMBOL_POLYGON = 5,                    /* POLYGON  */
+  YYSYMBOL_MULTIPOINT = 6,                 /* MULTIPOINT  */
+  YYSYMBOL_MULTILINESTRING = 7,            /* MULTILINESTRING  */
+  YYSYMBOL_MULTIPOLYGON = 8,               /* MULTIPOLYGON  */
+  YYSYMBOL_GEOMETRYCOLLECTION = 9,         /* GEOMETRYCOLLECTION  */
+  YYSYMBOL_CIRCULARSTRING = 10,            /* CIRCULARSTRING  */
+  YYSYMBOL_COMPOUNDCURVE = 11,             /* COMPOUNDCURVE  */
+  YYSYMBOL_CURVEPOLYGON = 12,              /* CURVEPOLYGON  */
+  YYSYMBOL_MULTICURVE = 13,                /* MULTICURVE  */
+  YYSYMBOL_MULTISURFACE = 14,              /* MULTISURFACE  */
+  YYSYMBOL_POINTM = 15,                    /* POINTM  */
+  YYSYMBOL_LINESTRINGM = 16,               /* LINESTRINGM  */
+  YYSYMBOL_POLYGONM = 17,                  /* POLYGONM  */
+  YYSYMBOL_MULTIPOINTM = 18,               /* MULTIPOINTM  */
+  YYSYMBOL_MULTILINESTRINGM = 19,          /* MULTILINESTRINGM  */
+  YYSYMBOL_MULTIPOLYGONM = 20,             /* MULTIPOLYGONM  */
+  YYSYMBOL_GEOMETRYCOLLECTIONM = 21,       /* GEOMETRYCOLLECTIONM  */
+  YYSYMBOL_CIRCULARSTRINGM = 22,           /* CIRCULARSTRINGM  */
+  YYSYMBOL_COMPOUNDCURVEM = 23,            /* COMPOUNDCURVEM  */
+  YYSYMBOL_CURVEPOLYGONM = 24,             /* CURVEPOLYGONM  */
+  YYSYMBOL_MULTICURVEM = 25,               /* MULTICURVEM  */
+  YYSYMBOL_MULTISURFACEM = 26,             /* MULTISURFACEM  */
+  YYSYMBOL_SRID = 27,                      /* SRID  */
+  YYSYMBOL_EMPTY = 28,                     /* EMPTY  */
+  YYSYMBOL_VALUE = 29,                     /* VALUE  */
+  YYSYMBOL_LPAREN = 30,                    /* LPAREN  */
+  YYSYMBOL_RPAREN = 31,                    /* RPAREN  */
+  YYSYMBOL_COMMA = 32,                     /* COMMA  */
+  YYSYMBOL_EQUALS = 33,                    /* EQUALS  */
+  YYSYMBOL_SEMICOLON = 34,                 /* SEMICOLON  */
+  YYSYMBOL_WKB = 35,                       /* WKB  */
+  YYSYMBOL_YYACCEPT = 36,                  /* $accept  */
+  YYSYMBOL_geometry = 37,                  /* geometry  */
+  YYSYMBOL_38_1 = 38,                      /* $@1  */
+  YYSYMBOL_39_2 = 39,                      /* $@2  */
+  YYSYMBOL_geometry_int = 40,              /* geometry_int  */
+  YYSYMBOL_srid = 41,                      /* srid  */
+  YYSYMBOL_geom_wkb = 42,                  /* geom_wkb  */
+  YYSYMBOL_geom_point = 43,                /* geom_point  */
+  YYSYMBOL_44_3 = 44,                      /* $@3  */
+  YYSYMBOL_point = 45,                     /* point  */
+  YYSYMBOL_empty_point = 46,               /* empty_point  */
+  YYSYMBOL_47_4 = 47,                      /* $@4  */
+  YYSYMBOL_nonempty_point = 48,            /* nonempty_point  */
+  YYSYMBOL_49_5 = 49,                      /* $@5  */
+  YYSYMBOL_point_int = 50,                 /* point_int  */
+  YYSYMBOL_geom_multipoint = 51,           /* geom_multipoint  */
+  YYSYMBOL_52_6 = 52,                      /* $@6  */
+  YYSYMBOL_53_7 = 53,                      /* $@7  */
+  YYSYMBOL_multipoint = 54,                /* multipoint  */
+  YYSYMBOL_55_8 = 55,                      /* $@8  */
+  YYSYMBOL_multipoint_int = 56,            /* multipoint_int  */
+  YYSYMBOL_mpoint_element = 57,            /* mpoint_element  */
+  YYSYMBOL_58_9 = 58,                      /* $@9  */
+  YYSYMBOL_geom_linestring = 59,           /* geom_linestring  */
+  YYSYMBOL_60_10 = 60,                     /* $@10  */
+  YYSYMBOL_linestring = 61,                /* linestring  */
+  YYSYMBOL_empty_linestring = 62,          /* empty_linestring  */
+  YYSYMBOL_63_11 = 63,                     /* $@11  */
+  YYSYMBOL_nonempty_linestring = 64,       /* nonempty_linestring  */
+  YYSYMBOL_65_12 = 65,                     /* $@12  */
+  YYSYMBOL_nonempty_linestring_closed = 66, /* nonempty_linestring_closed  */
+  YYSYMBOL_67_13 = 67,                     /* $@13  */
+  YYSYMBOL_linestring_1 = 68,              /* linestring_1  */
+  YYSYMBOL_69_14 = 69,                     /* $@14  */
+  YYSYMBOL_linestring_int = 70,            /* linestring_int  */
+  YYSYMBOL_geom_circularstring = 71,       /* geom_circularstring  */
+  YYSYMBOL_72_15 = 72,                     /* $@15  */
+  YYSYMBOL_geom_circularstring_closed = 73, /* geom_circularstring_closed  */
+  YYSYMBOL_74_16 = 74,                     /* $@16  */
+  YYSYMBOL_circularstring = 75,            /* circularstring  */
+  YYSYMBOL_circularstring_closed = 76,     /* circularstring_closed  */
+  YYSYMBOL_empty_circularstring = 77,      /* empty_circularstring  */
+  YYSYMBOL_78_17 = 78,                     /* $@17  */
+  YYSYMBOL_nonempty_circularstring = 79,   /* nonempty_circularstring  */
+  YYSYMBOL_80_18 = 80,                     /* $@18  */
+  YYSYMBOL_nonempty_circularstring_closed = 81, /* nonempty_circularstring_closed  */
+  YYSYMBOL_82_19 = 82,                     /* $@19  */
+  YYSYMBOL_circularstring_1 = 83,          /* circularstring_1  */
+  YYSYMBOL_84_20 = 84,                     /* $@20  */
+  YYSYMBOL_circularstring_int = 85,        /* circularstring_int  */
+  YYSYMBOL_geom_compoundcurve = 86,        /* geom_compoundcurve  */
+  YYSYMBOL_87_21 = 87,                     /* $@21  */
+  YYSYMBOL_88_22 = 88,                     /* $@22  */
+  YYSYMBOL_compoundcurve = 89,             /* compoundcurve  */
+  YYSYMBOL_90_23 = 90,                     /* $@23  */
+  YYSYMBOL_compoundcurve_int = 91,         /* compoundcurve_int  */
+  YYSYMBOL_geom_multilinestring = 92,      /* geom_multilinestring  */
+  YYSYMBOL_93_24 = 93,                     /* $@24  */
+  YYSYMBOL_94_25 = 94,                     /* $@25  */
+  YYSYMBOL_multilinestring = 95,           /* multilinestring  */
+  YYSYMBOL_96_26 = 96,                     /* $@26  */
+  YYSYMBOL_multilinestring_int = 97,       /* multilinestring_int  */
+  YYSYMBOL_geom_multicurve = 98,           /* geom_multicurve  */
+  YYSYMBOL_99_27 = 99,                     /* $@27  */
+  YYSYMBOL_100_28 = 100,                   /* $@28  */
+  YYSYMBOL_multicurve = 101,               /* multicurve  */
+  YYSYMBOL_102_29 = 102,                   /* $@29  */
+  YYSYMBOL_multicurve_int = 103,           /* multicurve_int  */
+  YYSYMBOL_geom_polygon = 104,             /* geom_polygon  */
+  YYSYMBOL_105_30 = 105,                   /* $@30  */
+  YYSYMBOL_polygon = 106,                  /* polygon  */
+  YYSYMBOL_empty_polygon = 107,            /* empty_polygon  */
+  YYSYMBOL_108_31 = 108,                   /* $@31  */
+  YYSYMBOL_nonempty_polygon = 109,         /* nonempty_polygon  */
+  YYSYMBOL_110_32 = 110,                   /* $@32  */
+  YYSYMBOL_polygon_1 = 111,                /* polygon_1  */
+  YYSYMBOL_112_33 = 112,                   /* $@33  */
+  YYSYMBOL_polygon_int = 113,              /* polygon_int  */
+  YYSYMBOL_geom_curvepolygon = 114,        /* geom_curvepolygon  */
+  YYSYMBOL_115_34 = 115,                   /* $@34  */
+  YYSYMBOL_116_35 = 116,                   /* $@35  */
+  YYSYMBOL_curvepolygon = 117,             /* curvepolygon  */
+  YYSYMBOL_118_36 = 118,                   /* $@36  */
+  YYSYMBOL_curvepolygon_int = 119,         /* curvepolygon_int  */
+  YYSYMBOL_geom_multipolygon = 120,        /* geom_multipolygon  */
+  YYSYMBOL_121_37 = 121,                   /* $@37  */
+  YYSYMBOL_122_38 = 122,                   /* $@38  */
+  YYSYMBOL_multipolygon = 123,             /* multipolygon  */
+  YYSYMBOL_124_39 = 124,                   /* $@39  */
+  YYSYMBOL_multipolygon_int = 125,         /* multipolygon_int  */
+  YYSYMBOL_geom_multisurface = 126,        /* geom_multisurface  */
+  YYSYMBOL_127_40 = 127,                   /* $@40  */
+  YYSYMBOL_128_41 = 128,                   /* $@41  */
+  YYSYMBOL_multisurface = 129,             /* multisurface  */
+  YYSYMBOL_130_42 = 130,                   /* $@42  */
+  YYSYMBOL_multisurface_int = 131,         /* multisurface_int  */
+  YYSYMBOL_geom_geometrycollection = 132,  /* geom_geometrycollection  */
+  YYSYMBOL_133_43 = 133,                   /* $@43  */
+  YYSYMBOL_134_44 = 134,                   /* $@44  */
+  YYSYMBOL_geometrycollection = 135,       /* geometrycollection  */
+  YYSYMBOL_136_45 = 136,                   /* $@45  */
+  YYSYMBOL_geometrycollection_int = 137,   /* geometrycollection_int  */
+  YYSYMBOL_a_point = 138,                  /* a_point  */
+  YYSYMBOL_point_2d = 139,                 /* point_2d  */
+  YYSYMBOL_point_3d = 140,                 /* point_3d  */
+  YYSYMBOL_point_4d = 141,                 /* point_4d  */
+  YYSYMBOL_empty = 142                     /* empty  */
+};
+typedef enum yysymbol_kind_t yysymbol_kind_t;
+
 
 
 
@@ -276,6 +430,18 @@ typedef __INT_LEAST16_TYPE__ yytype_int16;
 typedef int_least16_t yytype_int16;
 #else
 typedef short yytype_int16;
+#endif
+
+/* Work around bug in HP-UX 11.23, which defines these macros
+   incorrectly for preprocessor constants.  This workaround can likely
+   be removed in 2023, as HPE has promised support for HP-UX 11.23
+   (aka HP-UX 11i v2) only through the end of 2022; see Table 2 of
+   <https://h20195.www2.hpe.com/V2/getpdf.aspx/4AA4-7673ENW.pdf>.  */
+#ifdef __hpux
+# undef UINT_LEAST8_MAX
+# undef UINT_LEAST16_MAX
+# define UINT_LEAST8_MAX 255
+# define UINT_LEAST16_MAX 65535
 #endif
 
 #if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
@@ -337,6 +503,7 @@ typedef int yytype_uint16;
 
 #define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
 
+
 /* Stored state numbers (used for stacks). */
 typedef yytype_uint8 yy_state_t;
 
@@ -354,6 +521,7 @@ typedef int yy_state_fast_t;
 #  define YY_(Msgid) Msgid
 # endif
 #endif
+
 
 #ifndef YY_ATTRIBUTE_PURE
 # if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
@@ -373,17 +541,23 @@ typedef int yy_state_fast_t;
 
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
-# define YYUSE(E) ((void) (E))
+# define YY_USE(E) ((void) (E))
 #else
-# define YYUSE(E) /* empty */
+# define YY_USE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+#if defined __GNUC__ && ! defined __ICC && 406 <= __GNUC__ * 100 + __GNUC_MINOR__
+# if __GNUC__ * 100 + __GNUC_MINOR__ < 407
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")
+# else
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
     _Pragma ("GCC diagnostic push")                                     \
     _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+# endif
 # define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
@@ -412,7 +586,7 @@ typedef int yy_state_fast_t;
 
 #define YY_ASSERT(E) ((void) (0 && (E)))
 
-#if ! defined yyoverflow || YYERROR_VERBOSE
+#if !defined yyoverflow
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
@@ -477,8 +651,7 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 # endif
-#endif /* ! defined yyoverflow || YYERROR_VERBOSE */
-
+#endif /* !defined yyoverflow */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
@@ -557,14 +730,16 @@ union yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  237
 
-#define YYUNDEFTOK  2
+/* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   290
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex, with out-of-bounds checking.  */
-#define YYTRANSLATE(YYX)                                                \
-  (0 <= (YYX) && (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+#define YYTRANSLATE(YYX)                                \
+  (0 <= (YYX) && (YYX) <= YYMAXUTOK                     \
+   ? YY_CAST (yysymbol_kind_t, yytranslate[YYX])        \
+   : YYSYMBOL_YYUNDEF)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex.  */
@@ -603,7 +778,7 @@ static const yytype_int8 yytranslate[] =
 };
 
 #if YYDEBUG
-  /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
+/* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
        0,    38,    38,    38,    40,    40,    43,    45,    47,    49,
@@ -626,24 +801,31 @@ static const yytype_int16 yyrline[] =
 };
 #endif
 
-#if YYDEBUG || YYERROR_VERBOSE || 0
+/** Accessing symbol of state STATE.  */
+#define YY_ACCESSING_SYMBOL(State) YY_CAST (yysymbol_kind_t, yystos[State])
+
+#if YYDEBUG || 0
+/* The user-facing name of the symbol whose (internal) number is
+   YYSYMBOL.  No bounds checking.  */
+static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
+
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "POINT", "LINESTRING", "POLYGON",
-  "MULTIPOINT", "MULTILINESTRING", "MULTIPOLYGON", "GEOMETRYCOLLECTION",
-  "CIRCULARSTRING", "COMPOUNDCURVE", "CURVEPOLYGON", "MULTICURVE",
-  "MULTISURFACE", "POINTM", "LINESTRINGM", "POLYGONM", "MULTIPOINTM",
-  "MULTILINESTRINGM", "MULTIPOLYGONM", "GEOMETRYCOLLECTIONM",
-  "CIRCULARSTRINGM", "COMPOUNDCURVEM", "CURVEPOLYGONM", "MULTICURVEM",
-  "MULTISURFACEM", "SRID", "EMPTY", "VALUE", "LPAREN", "RPAREN", "COMMA",
-  "EQUALS", "SEMICOLON", "WKB", "$accept", "geometry", "$@1", "$@2",
-  "geometry_int", "srid", "geom_wkb", "geom_point", "$@3", "point",
-  "empty_point", "$@4", "nonempty_point", "$@5", "point_int",
-  "geom_multipoint", "$@6", "$@7", "multipoint", "$@8", "multipoint_int",
-  "mpoint_element", "$@9", "geom_linestring", "$@10", "linestring",
-  "empty_linestring", "$@11", "nonempty_linestring", "$@12",
+  "\"end of file\"", "error", "\"invalid token\"", "POINT", "LINESTRING",
+  "POLYGON", "MULTIPOINT", "MULTILINESTRING", "MULTIPOLYGON",
+  "GEOMETRYCOLLECTION", "CIRCULARSTRING", "COMPOUNDCURVE", "CURVEPOLYGON",
+  "MULTICURVE", "MULTISURFACE", "POINTM", "LINESTRINGM", "POLYGONM",
+  "MULTIPOINTM", "MULTILINESTRINGM", "MULTIPOLYGONM",
+  "GEOMETRYCOLLECTIONM", "CIRCULARSTRINGM", "COMPOUNDCURVEM",
+  "CURVEPOLYGONM", "MULTICURVEM", "MULTISURFACEM", "SRID", "EMPTY",
+  "VALUE", "LPAREN", "RPAREN", "COMMA", "EQUALS", "SEMICOLON", "WKB",
+  "$accept", "geometry", "$@1", "$@2", "geometry_int", "srid", "geom_wkb",
+  "geom_point", "$@3", "point", "empty_point", "$@4", "nonempty_point",
+  "$@5", "point_int", "geom_multipoint", "$@6", "$@7", "multipoint", "$@8",
+  "multipoint_int", "mpoint_element", "$@9", "geom_linestring", "$@10",
+  "linestring", "empty_linestring", "$@11", "nonempty_linestring", "$@12",
   "nonempty_linestring_closed", "$@13", "linestring_1", "$@14",
   "linestring_int", "geom_circularstring", "$@15",
   "geom_circularstring_closed", "$@16", "circularstring",
@@ -663,19 +845,13 @@ static const char *const yytname[] =
   "geometrycollection_int", "a_point", "point_2d", "point_3d", "point_4d",
   "empty", YY_NULLPTR
 };
-#endif
 
-# ifdef YYPRINT
-/* YYTOKNUM[NUM] -- (External) token number corresponding to the
-   (internal) symbol number NUM (which must be that of a token).  */
-static const yytype_int16 yytoknum[] =
+static const char *
+yysymbol_name (yysymbol_kind_t yysymbol)
 {
-       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290
-};
-# endif
+  return yytname[yysymbol];
+}
+#endif
 
 #define YYPACT_NINF (-166)
 
@@ -687,8 +863,8 @@ static const yytype_int16 yytoknum[] =
 #define yytable_value_is_error(Yyn) \
   0
 
-  /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-     STATE-NUM.  */
+/* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
+   STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
      -17,   -14,    21,   145,    -7,     5,  -166,    29,    30,    40,
@@ -717,9 +893,9 @@ static const yytype_int16 yypact[] =
     -166,  -166,  -166,  -166,  -166,  -166,  -166
 };
 
-  /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
-     Performed when YYTABLE does not specify something else to do.  Zero
-     means the default is an error.  */
+/* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
+   Performed when YYTABLE does not specify something else to do.  Zero
+   means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
        4,     0,     0,     0,     0,     0,     1,    26,    48,   114,
@@ -748,7 +924,7 @@ static const yytype_uint8 yydefact[] =
       63,   131,   132,   107,   108,   151,   152
 };
 
-  /* YYPGOTO[NTERM-NUM].  */
+/* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
     -166,  -166,  -166,  -166,   -88,  -166,  -166,  -166,  -166,    27,
@@ -764,10 +940,10 @@ static const yytype_int16 yypgoto[] =
     -166,  -166,  -122,  -166,  -166,  -166,   -49
 };
 
-  /* YYDEFGOTO[NTERM-NUM].  */
-static const yytype_int16 yydefgoto[] =
+/* YYDEFGOTO[NTERM-NUM].  */
+static const yytype_uint8 yydefgoto[] =
 {
-      -1,     2,    88,     3,    32,     4,    33,    34,    76,    48,
+       0,     2,    88,     3,    32,     4,    33,    34,    76,    48,
       49,    50,    51,    52,    92,    35,    63,    79,    99,   100,
      162,   163,   164,    36,    77,    53,    54,    55,    56,    57,
      179,   180,    94,    95,   157,    37,    83,   181,   211,    67,
@@ -780,9 +956,9 @@ static const yytype_int16 yydefgoto[] =
      109,   170,   140,   141,   142,   143,   101
 };
 
-  /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
-     positive, shift that token.  If negative, reduce the rule whose
-     number is the opposite.  If YYTABLE_NINF, syntax error.  */
+/* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
+   positive, shift that token.  If negative, reduce the rule whose
+   number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
      138,    90,   167,   175,   161,   184,    93,   187,   186,   159,
@@ -829,8 +1005,8 @@ static const yytype_int16 yycheck[] =
       35
 };
 
-  /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-     symbol of state STATE-NUM.  */
+/* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
+   state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
        0,    27,    37,    39,    41,    33,     0,     3,     4,     5,
@@ -859,7 +1035,7 @@ static const yytype_uint8 yystos[] =
       76,    66,    73,    64,    71,   109,   114
 };
 
-  /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
+/* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_uint8 yyr1[] =
 {
        0,    36,    38,    37,    39,    37,    40,    40,    40,    40,
@@ -881,7 +1057,7 @@ static const yytype_uint8 yyr1[] =
      137,   137,   137,   138,   138,   138,   139,   140,   141,   142
 };
 
-  /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
+/* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     0,     4,     0,     2,     1,     1,     1,     1,
@@ -904,14 +1080,15 @@ static const yytype_int8 yyr2[] =
 };
 
 
+enum { YYENOMEM = -2 };
+
 #define yyerrok         (yyerrstatus = 0)
 #define yyclearin       (yychar = YYEMPTY)
-#define YYEMPTY         (-2)
-#define YYEOF           0
 
 #define YYACCEPT        goto yyacceptlab
 #define YYABORT         goto yyabortlab
 #define YYERROR         goto yyerrorlab
+#define YYNOMEM         goto yyexhaustedlab
 
 
 #define YYRECOVERING()  (!!yyerrstatus)
@@ -933,10 +1110,9 @@ static const yytype_int8 yyr2[] =
       }                                                           \
   while (0)
 
-/* Error token number */
-#define YYTERROR        1
-#define YYERRCODE       256
-
+/* Backward compatibility with an undocumented macro.
+   Use YYerror or YYUNDEF. */
+#define YYERRCODE YYUNDEF
 
 /* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
    If N is 0, then set CURRENT to the empty location which ends
@@ -980,12 +1156,19 @@ do {                                            \
 } while (0)
 
 
-/* YY_LOCATION_PRINT -- Print the location on the stream.
+/* YYLOCATION_PRINT -- Print the location on the stream.
    This macro was not mandated originally: define only if we know
    we won't break user code: when these are the locations we know.  */
 
-#ifndef YY_LOCATION_PRINT
-# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+# ifndef YYLOCATION_PRINT
+
+#  if defined YY_LOCATION_PRINT
+
+   /* Temporary convenience wrapper in case some people defined the
+      undocumented and private YY_LOCATION_PRINT macros.  */
+#   define YYLOCATION_PRINT(File, Loc)  YY_LOCATION_PRINT(File, *(Loc))
+
+#  elif defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
 
 /* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
 
@@ -1013,24 +1196,32 @@ yy_location_print_ (FILE *yyo, YYLTYPE const * const yylocp)
         res += YYFPRINTF (yyo, "-%d", end_col);
     }
   return res;
- }
+}
 
-#  define YY_LOCATION_PRINT(File, Loc)          \
-  yy_location_print_ (File, &(Loc))
+#   define YYLOCATION_PRINT  yy_location_print_
 
-# else
-#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-# endif
-#endif
+    /* Temporary convenience wrapper in case some people defined the
+       undocumented and private YY_LOCATION_PRINT macros.  */
+#   define YY_LOCATION_PRINT(File, Loc)  YYLOCATION_PRINT(File, &(Loc))
+
+#  else
+
+#   define YYLOCATION_PRINT(File, Loc) ((void) 0)
+    /* Temporary convenience wrapper in case some people defined the
+       undocumented and private YY_LOCATION_PRINT macros.  */
+#   define YY_LOCATION_PRINT  YYLOCATION_PRINT
+
+#  endif
+# endif /* !defined YYLOCATION_PRINT */
 
 
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)                    \
+# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)                    \
 do {                                                                      \
   if (yydebug)                                                            \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       yy_symbol_print (stderr,                                            \
-                  Type, Value, Location); \
+                  Kind, Value, Location); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -1041,19 +1232,16 @@ do {                                                                      \
 `-----------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_value_print (FILE *yyo,
+                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
   FILE *yyoutput = yyo;
-  YYUSE (yyoutput);
-  YYUSE (yylocationp);
+  YY_USE (yyoutput);
+  YY_USE (yylocationp);
   if (!yyvaluep)
     return;
-# ifdef YYPRINT
-  if (yytype < YYNTOKENS)
-    YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
-# endif
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (yytype);
+  YY_USE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -1063,14 +1251,15 @@ yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YY
 `---------------------------*/
 
 static void
-yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+yy_symbol_print (FILE *yyo,
+                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
   YYFPRINTF (yyo, "%s %s (",
-             yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
+             yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
 
-  YY_LOCATION_PRINT (yyo, *yylocationp);
+  YYLOCATION_PRINT (yyo, yylocationp);
   YYFPRINTF (yyo, ": ");
-  yy_symbol_value_print (yyo, yytype, yyvaluep, yylocationp);
+  yy_symbol_value_print (yyo, yykind, yyvaluep, yylocationp);
   YYFPRINTF (yyo, ")");
 }
 
@@ -1103,7 +1292,8 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
+yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp,
+                 int yyrule)
 {
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -1115,9 +1305,9 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
     {
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
-                       yystos[+yyssp[yyi + 1 - yynrhs]],
-                       &yyvsp[(yyi + 1) - (yynrhs)]
-                       , &(yylsp[(yyi + 1) - (yynrhs)])                       );
+                       YY_ACCESSING_SYMBOL (+yyssp[yyi + 1 - yynrhs]),
+                       &yyvsp[(yyi + 1) - (yynrhs)],
+                       &(yylsp[(yyi + 1) - (yynrhs)]));
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -1132,8 +1322,8 @@ do {                                    \
    multiple parsers can coexist.  */
 int yydebug;
 #else /* !YYDEBUG */
-# define YYDPRINTF(Args)
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)
+# define YYDPRINTF(Args) ((void) 0)
+# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
 #endif /* !YYDEBUG */
@@ -1156,260 +1346,31 @@ int yydebug;
 #endif
 
 
-#if YYERROR_VERBOSE
 
-# ifndef yystrlen
-#  if defined __GLIBC__ && defined _STRING_H
-#   define yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
-#  else
-/* Return the length of YYSTR.  */
-static YYPTRDIFF_T
-yystrlen (const char *yystr)
-{
-  YYPTRDIFF_T yylen;
-  for (yylen = 0; yystr[yylen]; yylen++)
-    continue;
-  return yylen;
-}
-#  endif
-# endif
 
-# ifndef yystpcpy
-#  if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
-#   define yystpcpy stpcpy
-#  else
-/* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
-   YYDEST.  */
-static char *
-yystpcpy (char *yydest, const char *yysrc)
-{
-  char *yyd = yydest;
-  const char *yys = yysrc;
 
-  while ((*yyd++ = *yys++) != '\0')
-    continue;
-
-  return yyd - 1;
-}
-#  endif
-# endif
-
-# ifndef yytnamerr
-/* Copy to YYRES the contents of YYSTR after stripping away unnecessary
-   quotes and backslashes, so that it's suitable for yyerror.  The
-   heuristic is that double-quoting is unnecessary unless the string
-   contains an apostrophe, a comma, or backslash (other than
-   backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
-   null, do not copy; instead, return the length of what the result
-   would have been.  */
-static YYPTRDIFF_T
-yytnamerr (char *yyres, const char *yystr)
-{
-  if (*yystr == '"')
-    {
-      YYPTRDIFF_T yyn = 0;
-      char const *yyp = yystr;
-
-      for (;;)
-        switch (*++yyp)
-          {
-          case '\'':
-          case ',':
-            goto do_not_strip_quotes;
-
-          case '\\':
-            if (*++yyp != '\\')
-              goto do_not_strip_quotes;
-            else
-              goto append;
-
-          append:
-          default:
-            if (yyres)
-              yyres[yyn] = *yyp;
-            yyn++;
-            break;
-
-          case '"':
-            if (yyres)
-              yyres[yyn] = '\0';
-            return yyn;
-          }
-    do_not_strip_quotes: ;
-    }
-
-  if (yyres)
-    return yystpcpy (yyres, yystr) - yyres;
-  else
-    return yystrlen (yystr);
-}
-# endif
-
-/* Copy into *YYMSG, which is of size *YYMSG_ALLOC, an error message
-   about the unexpected token YYTOKEN for the state stack whose top is
-   YYSSP.
-
-   Return 0 if *YYMSG was successfully written.  Return 1 if *YYMSG is
-   not large enough to hold the message.  In that case, also set
-   *YYMSG_ALLOC to the required number of bytes.  Return 2 if the
-   required number of bytes is too large to store.  */
-static int
-yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
-                yy_state_t *yyssp, int yytoken)
-{
-  enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
-  /* Internationalized format string. */
-  const char *yyformat = YY_NULLPTR;
-  /* Arguments of yyformat: reported tokens (one for the "unexpected",
-     one per "expected"). */
-  char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
-  /* Actual size of YYARG. */
-  int yycount = 0;
-  /* Cumulated lengths of YYARG.  */
-  YYPTRDIFF_T yysize = 0;
-
-  /* There are many possibilities here to consider:
-     - If this state is a consistent state with a default action, then
-       the only way this function was invoked is if the default action
-       is an error action.  In that case, don't check for expected
-       tokens because there are none.
-     - The only way there can be no lookahead present (in yychar) is if
-       this state is a consistent state with a default action.  Thus,
-       detecting the absence of a lookahead is sufficient to determine
-       that there is no unexpected or expected token to report.  In that
-       case, just report a simple "syntax error".
-     - Don't assume there isn't a lookahead just because this state is a
-       consistent state with a default action.  There might have been a
-       previous inconsistent state, consistent state with a non-default
-       action, or user semantic action that manipulated yychar.
-     - Of course, the expected token list depends on states to have
-       correct lookahead information, and it depends on the parser not
-       to perform extra reductions after fetching a lookahead from the
-       scanner and before detecting a syntax error.  Thus, state merging
-       (from LALR or IELR) and default reductions corrupt the expected
-       token list.  However, the list is correct for canonical LR with
-       one exception: it will still contain any token that will not be
-       accepted due to an error action in a later state.
-  */
-  if (yytoken != YYEMPTY)
-    {
-      int yyn = yypact[+*yyssp];
-      YYPTRDIFF_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
-      yysize = yysize0;
-      yyarg[yycount++] = yytname[yytoken];
-      if (!yypact_value_is_default (yyn))
-        {
-          /* Start YYX at -YYN if negative to avoid negative indexes in
-             YYCHECK.  In other words, skip the first -YYN actions for
-             this state because they are default actions.  */
-          int yyxbegin = yyn < 0 ? -yyn : 0;
-          /* Stay within bounds of both yycheck and yytname.  */
-          int yychecklim = YYLAST - yyn + 1;
-          int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
-          int yyx;
-
-          for (yyx = yyxbegin; yyx < yyxend; ++yyx)
-            if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR
-                && !yytable_value_is_error (yytable[yyx + yyn]))
-              {
-                if (yycount == YYERROR_VERBOSE_ARGS_MAXIMUM)
-                  {
-                    yycount = 1;
-                    yysize = yysize0;
-                    break;
-                  }
-                yyarg[yycount++] = yytname[yyx];
-                {
-                  YYPTRDIFF_T yysize1
-                    = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
-                  if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-                    yysize = yysize1;
-                  else
-                    return 2;
-                }
-              }
-        }
-    }
-
-  switch (yycount)
-    {
-# define YYCASE_(N, S)                      \
-      case N:                               \
-        yyformat = S;                       \
-      break
-    default: /* Avoid compiler warnings. */
-      YYCASE_(0, YY_("syntax error"));
-      YYCASE_(1, YY_("syntax error, unexpected %s"));
-      YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
-      YYCASE_(3, YY_("syntax error, unexpected %s, expecting %s or %s"));
-      YYCASE_(4, YY_("syntax error, unexpected %s, expecting %s or %s or %s"));
-      YYCASE_(5, YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s"));
-# undef YYCASE_
-    }
-
-  {
-    /* Don't count the "%s"s in the final size, but reserve room for
-       the terminator.  */
-    YYPTRDIFF_T yysize1 = yysize + (yystrlen (yyformat) - 2 * yycount) + 1;
-    if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-      yysize = yysize1;
-    else
-      return 2;
-  }
-
-  if (*yymsg_alloc < yysize)
-    {
-      *yymsg_alloc = 2 * yysize;
-      if (! (yysize <= *yymsg_alloc
-             && *yymsg_alloc <= YYSTACK_ALLOC_MAXIMUM))
-        *yymsg_alloc = YYSTACK_ALLOC_MAXIMUM;
-      return 1;
-    }
-
-  /* Avoid sprintf, as that infringes on the user's name space.
-     Don't have undefined behavior even if the translation
-     produced a string with the wrong number of "%s"s.  */
-  {
-    char *yyp = *yymsg;
-    int yyi = 0;
-    while ((*yyp = *yyformat) != '\0')
-      if (*yyp == '%' && yyformat[1] == 's' && yyi < yycount)
-        {
-          yyp += yytnamerr (yyp, yyarg[yyi++]);
-          yyformat += 2;
-        }
-      else
-        {
-          ++yyp;
-          ++yyformat;
-        }
-  }
-  return 0;
-}
-#endif /* YYERROR_VERBOSE */
 
 /*-----------------------------------------------.
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
+yydestruct (const char *yymsg,
+            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
 {
-  YYUSE (yyvaluep);
-  YYUSE (yylocationp);
+  YY_USE (yyvaluep);
+  YY_USE (yylocationp);
   if (!yymsg)
     yymsg = "Deleting";
-  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
+  YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
 
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (yytype);
+  YY_USE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
-
-
-/* The lookahead symbol.  */
+/* Lookahead token kind.  */
 int yychar;
 
 /* The semantic value of the lookahead symbol.  */
@@ -1424,6 +1385,8 @@ YYLTYPE yylloc
 int yynerrs;
 
 
+
+
 /*----------.
 | yyparse.  |
 `----------*/
@@ -1431,53 +1394,45 @@ int yynerrs;
 int
 yyparse (void)
 {
-    yy_state_fast_t yystate;
+    yy_state_fast_t yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
-    int yyerrstatus;
+    int yyerrstatus = 0;
 
-    /* The stacks and their tools:
-       'yyss': related to states.
-       'yyvs': related to semantic values.
-       'yyls': related to locations.
-
-       Refer to the stacks through separate pointers, to allow yyoverflow
+    /* Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
 
-    /* The state stack.  */
+    /* Their size.  */
+    YYPTRDIFF_T yystacksize = YYINITDEPTH;
+
+    /* The state stack: array, bottom, top.  */
     yy_state_t yyssa[YYINITDEPTH];
-    yy_state_t *yyss;
-    yy_state_t *yyssp;
+    yy_state_t *yyss = yyssa;
+    yy_state_t *yyssp = yyss;
 
-    /* The semantic value stack.  */
+    /* The semantic value stack: array, bottom, top.  */
     YYSTYPE yyvsa[YYINITDEPTH];
-    YYSTYPE *yyvs;
-    YYSTYPE *yyvsp;
+    YYSTYPE *yyvs = yyvsa;
+    YYSTYPE *yyvsp = yyvs;
 
-    /* The location stack.  */
+    /* The location stack: array, bottom, top.  */
     YYLTYPE yylsa[YYINITDEPTH];
-    YYLTYPE *yyls;
-    YYLTYPE *yylsp;
-
-    /* The locations where the error started and ended.  */
-    YYLTYPE yyerror_range[3];
-
-    YYPTRDIFF_T yystacksize;
+    YYLTYPE *yyls = yylsa;
+    YYLTYPE *yylsp = yyls;
 
   int yyn;
+  /* The return value of yyparse.  */
   int yyresult;
-  /* Lookahead token as an internal (translated) token number.  */
-  int yytoken = 0;
+  /* Lookahead symbol kind.  */
+  yysymbol_kind_t yytoken = YYSYMBOL_YYEMPTY;
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
   YYLTYPE yyloc;
 
-#if YYERROR_VERBOSE
-  /* Buffer for error messages, and its allocated size.  */
-  char yymsgbuf[128];
-  char *yymsg = yymsgbuf;
-  YYPTRDIFF_T yymsg_alloc = sizeof yymsgbuf;
-#endif
+  /* The locations where the error started and ended.  */
+  YYLTYPE yyerror_range[3];
+
+
 
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
 
@@ -1485,17 +1440,10 @@ yyparse (void)
      Keep to zero when no symbol should be popped.  */
   int yylen = 0;
 
-  yyssp = yyss = yyssa;
-  yyvsp = yyvs = yyvsa;
-  yylsp = yyls = yylsa;
-  yystacksize = YYINITDEPTH;
-
   YYDPRINTF ((stderr, "Starting parse\n"));
 
-  yystate = 0;
-  yyerrstatus = 0;
-  yynerrs = 0;
   yychar = YYEMPTY; /* Cause a token to be read.  */
+
   yylsp[0] = yylloc;
   goto yysetstate;
 
@@ -1518,10 +1466,11 @@ yysetstate:
   YY_IGNORE_USELESS_CAST_BEGIN
   *yyssp = YY_CAST (yy_state_t, yystate);
   YY_IGNORE_USELESS_CAST_END
+  YY_STACK_PRINT (yyss, yyssp);
 
   if (yyss + yystacksize - 1 <= yyssp)
 #if !defined yyoverflow && !defined YYSTACK_RELOCATE
-    goto yyexhaustedlab;
+    YYNOMEM;
 #else
     {
       /* Get the current used size of the three stacks, in elements.  */
@@ -1552,7 +1501,7 @@ yysetstate:
 # else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
-        goto yyexhaustedlab;
+        YYNOMEM;
       yystacksize *= 2;
       if (YYMAXDEPTH < yystacksize)
         yystacksize = YYMAXDEPTH;
@@ -1563,11 +1512,11 @@ yysetstate:
           YY_CAST (union yyalloc *,
                    YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (yystacksize))));
         if (! yyptr)
-          goto yyexhaustedlab;
+          YYNOMEM;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
         YYSTACK_RELOCATE (yyls_alloc, yyls);
-# undef YYSTACK_RELOCATE
+#  undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
       }
@@ -1586,6 +1535,7 @@ yysetstate:
         YYABORT;
     }
 #endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
+
 
   if (yystate == YYFINAL)
     YYACCEPT;
@@ -1607,17 +1557,29 @@ yybackup:
 
   /* Not known => get a lookahead token if don't already have one.  */
 
-  /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
+  /* YYCHAR is either empty, or end-of-input, or a valid lookahead.  */
   if (yychar == YYEMPTY)
     {
-      YYDPRINTF ((stderr, "Reading a token: "));
+      YYDPRINTF ((stderr, "Reading a token\n"));
       yychar = yylex ();
     }
 
   if (yychar <= YYEOF)
     {
-      yychar = yytoken = YYEOF;
+      yychar = YYEOF;
+      yytoken = YYSYMBOL_YYEOF;
       YYDPRINTF ((stderr, "Now at end of input.\n"));
+    }
+  else if (yychar == YYerror)
+    {
+      /* The scanner already issued an error message, process directly
+         to error recovery.  But do not keep the error token as
+         lookahead, it is too special and may lead us to an endless
+         loop in error recovery. */
+      yychar = YYUNDEF;
+      yytoken = YYSYMBOL_YYerror;
+      yyerror_range[1] = yylloc;
+      goto yyerrlab1;
     }
   else
     {
@@ -1690,542 +1652,542 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2:
+  case 2: /* $@1: %empty  */
 #line 38 "wktparse.y"
                          { alloc_lwgeom(srid); }
-#line 1697 "y.tab.c"
+#line 1659 "y.tab.c"
     break;
 
-  case 4:
+  case 4: /* $@2: %empty  */
 #line 40 "wktparse.y"
         { alloc_lwgeom(-1); }
-#line 1703 "y.tab.c"
+#line 1665 "y.tab.c"
     break;
 
-  case 19:
+  case 19: /* srid: SRID EQUALS VALUE  */
 #line 70 "wktparse.y"
                           { set_srid((yyvsp[0].value)); }
-#line 1709 "y.tab.c"
+#line 1671 "y.tab.c"
     break;
 
-  case 20:
+  case 20: /* geom_wkb: WKB  */
 #line 73 "wktparse.y"
             { alloc_wkb((yyvsp[0].wkb)); }
-#line 1715 "y.tab.c"
+#line 1677 "y.tab.c"
     break;
 
-  case 22:
+  case 22: /* $@3: %empty  */
 #line 81 "wktparse.y"
                { set_zm(0, 1); }
-#line 1721 "y.tab.c"
+#line 1683 "y.tab.c"
     break;
 
-  case 26:
+  case 26: /* $@4: %empty  */
 #line 89 "wktparse.y"
         { alloc_point(); }
-#line 1727 "y.tab.c"
+#line 1689 "y.tab.c"
     break;
 
-  case 27:
+  case 27: /* empty_point: $@4 empty  */
 #line 89 "wktparse.y"
                                  { pop(); }
-#line 1733 "y.tab.c"
+#line 1695 "y.tab.c"
     break;
 
-  case 28:
+  case 28: /* $@5: %empty  */
 #line 92 "wktparse.y"
         { alloc_point(); }
-#line 1739 "y.tab.c"
+#line 1701 "y.tab.c"
     break;
 
-  case 29:
+  case 29: /* nonempty_point: $@5 point_int  */
 #line 92 "wktparse.y"
                                      { pop(); }
-#line 1745 "y.tab.c"
+#line 1707 "y.tab.c"
     break;
 
-  case 31:
+  case 31: /* $@6: %empty  */
 #line 100 "wktparse.y"
                    { alloc_multipoint(); }
-#line 1751 "y.tab.c"
+#line 1713 "y.tab.c"
     break;
 
-  case 32:
+  case 32: /* geom_multipoint: MULTIPOINT $@6 multipoint  */
 #line 100 "wktparse.y"
                                                        { pop(); }
-#line 1757 "y.tab.c"
+#line 1719 "y.tab.c"
     break;
 
-  case 33:
+  case 33: /* $@7: %empty  */
 #line 102 "wktparse.y"
                     { set_zm(0, 1); alloc_multipoint(); }
-#line 1763 "y.tab.c"
+#line 1725 "y.tab.c"
     break;
 
-  case 34:
+  case 34: /* geom_multipoint: MULTIPOINTM $@7 multipoint  */
 #line 102 "wktparse.y"
                                                                      {pop(); }
-#line 1769 "y.tab.c"
+#line 1731 "y.tab.c"
     break;
 
-  case 36:
+  case 36: /* $@8: %empty  */
 #line 107 "wktparse.y"
         { alloc_counter(); }
-#line 1775 "y.tab.c"
+#line 1737 "y.tab.c"
     break;
 
-  case 37:
+  case 37: /* multipoint: $@8 LPAREN multipoint_int RPAREN  */
 #line 107 "wktparse.y"
                                                           { pop(); }
-#line 1781 "y.tab.c"
+#line 1743 "y.tab.c"
     break;
 
-  case 41:
+  case 41: /* $@9: %empty  */
 #line 118 "wktparse.y"
         { alloc_point(); }
-#line 1787 "y.tab.c"
+#line 1749 "y.tab.c"
     break;
 
-  case 42:
+  case 42: /* mpoint_element: $@9 a_point  */
 #line 118 "wktparse.y"
                                    { pop(); }
-#line 1793 "y.tab.c"
+#line 1755 "y.tab.c"
     break;
 
-  case 44:
+  case 44: /* $@10: %empty  */
 #line 126 "wktparse.y"
                     { set_zm(0, 1); }
-#line 1799 "y.tab.c"
+#line 1761 "y.tab.c"
     break;
 
-  case 48:
+  case 48: /* $@11: %empty  */
 #line 134 "wktparse.y"
         { alloc_linestring(); }
-#line 1805 "y.tab.c"
+#line 1767 "y.tab.c"
     break;
 
-  case 49:
+  case 49: /* empty_linestring: $@11 empty  */
 #line 134 "wktparse.y"
                                       { pop(); }
-#line 1811 "y.tab.c"
+#line 1773 "y.tab.c"
     break;
 
-  case 50:
+  case 50: /* $@12: %empty  */
 #line 137 "wktparse.y"
         { alloc_linestring(); }
-#line 1817 "y.tab.c"
+#line 1779 "y.tab.c"
     break;
 
-  case 51:
+  case 51: /* nonempty_linestring: $@12 linestring_1  */
 #line 137 "wktparse.y"
                                              { pop(); }
-#line 1823 "y.tab.c"
+#line 1785 "y.tab.c"
     break;
 
-  case 52:
+  case 52: /* $@13: %empty  */
 #line 140 "wktparse.y"
         { alloc_linestring_closed(); }
-#line 1829 "y.tab.c"
+#line 1791 "y.tab.c"
     break;
 
-  case 53:
+  case 53: /* nonempty_linestring_closed: $@13 linestring_1  */
 #line 140 "wktparse.y"
                                                     { pop(); }
-#line 1835 "y.tab.c"
+#line 1797 "y.tab.c"
     break;
 
-  case 54:
+  case 54: /* $@14: %empty  */
 #line 143 "wktparse.y"
         { alloc_counter(); }
-#line 1841 "y.tab.c"
+#line 1803 "y.tab.c"
     break;
 
-  case 55:
+  case 55: /* linestring_1: $@14 LPAREN linestring_int RPAREN  */
 #line 143 "wktparse.y"
                                                           { popc(); }
-#line 1847 "y.tab.c"
+#line 1809 "y.tab.c"
     break;
 
-  case 59:
+  case 59: /* $@15: %empty  */
 #line 155 "wktparse.y"
                         {set_zm(0, 1); }
-#line 1853 "y.tab.c"
+#line 1815 "y.tab.c"
     break;
 
-  case 62:
+  case 62: /* $@16: %empty  */
 #line 160 "wktparse.y"
                         {set_zm(0, 1); }
-#line 1859 "y.tab.c"
+#line 1821 "y.tab.c"
     break;
 
-  case 68:
+  case 68: /* $@17: %empty  */
 #line 173 "wktparse.y"
         { alloc_circularstring(); }
-#line 1865 "y.tab.c"
+#line 1827 "y.tab.c"
     break;
 
-  case 69:
+  case 69: /* empty_circularstring: $@17 empty  */
 #line 173 "wktparse.y"
                                           { pop(); }
-#line 1871 "y.tab.c"
+#line 1833 "y.tab.c"
     break;
 
-  case 70:
+  case 70: /* $@18: %empty  */
 #line 176 "wktparse.y"
         { alloc_circularstring(); }
-#line 1877 "y.tab.c"
+#line 1839 "y.tab.c"
     break;
 
-  case 71:
+  case 71: /* nonempty_circularstring: $@18 circularstring_1  */
 #line 176 "wktparse.y"
                                                      { pop(); }
-#line 1883 "y.tab.c"
+#line 1845 "y.tab.c"
     break;
 
-  case 72:
+  case 72: /* $@19: %empty  */
 #line 179 "wktparse.y"
         { alloc_circularstring_closed(); }
-#line 1889 "y.tab.c"
+#line 1851 "y.tab.c"
     break;
 
-  case 73:
+  case 73: /* nonempty_circularstring_closed: $@19 circularstring_1  */
 #line 179 "wktparse.y"
                                                             { pop(); }
-#line 1895 "y.tab.c"
+#line 1857 "y.tab.c"
     break;
 
-  case 74:
+  case 74: /* $@20: %empty  */
 #line 182 "wktparse.y"
         { alloc_counter(); }
-#line 1901 "y.tab.c"
+#line 1863 "y.tab.c"
     break;
 
-  case 75:
+  case 75: /* circularstring_1: $@20 LPAREN circularstring_int RPAREN  */
 #line 182 "wktparse.y"
                                                               { popc(); }
-#line 1907 "y.tab.c"
+#line 1869 "y.tab.c"
     break;
 
-  case 78:
+  case 78: /* $@21: %empty  */
 #line 192 "wktparse.y"
                       { alloc_compoundcurve(); }
-#line 1913 "y.tab.c"
+#line 1875 "y.tab.c"
     break;
 
-  case 79:
+  case 79: /* geom_compoundcurve: COMPOUNDCURVE $@21 compoundcurve  */
 #line 192 "wktparse.y"
                                                                { pop(); }
-#line 1919 "y.tab.c"
+#line 1881 "y.tab.c"
     break;
 
-  case 80:
+  case 80: /* $@22: %empty  */
 #line 194 "wktparse.y"
                        {set_zm(0, 1); alloc_compoundcurve(); }
-#line 1925 "y.tab.c"
+#line 1887 "y.tab.c"
     break;
 
-  case 81:
+  case 81: /* geom_compoundcurve: COMPOUNDCURVEM $@22 compoundcurve  */
 #line 194 "wktparse.y"
                                                                              { pop(); }
-#line 1931 "y.tab.c"
+#line 1893 "y.tab.c"
     break;
 
-  case 83:
+  case 83: /* $@23: %empty  */
 #line 199 "wktparse.y"
         { alloc_counter(); }
-#line 1937 "y.tab.c"
+#line 1899 "y.tab.c"
     break;
 
-  case 84:
+  case 84: /* compoundcurve: $@23 LPAREN compoundcurve_int RPAREN  */
 #line 199 "wktparse.y"
                                                              { pop(); }
-#line 1943 "y.tab.c"
+#line 1905 "y.tab.c"
     break;
 
-  case 89:
+  case 89: /* $@24: %empty  */
 #line 213 "wktparse.y"
                         { alloc_multilinestring(); }
-#line 1949 "y.tab.c"
+#line 1911 "y.tab.c"
     break;
 
-  case 90:
+  case 90: /* geom_multilinestring: MULTILINESTRING $@24 multilinestring  */
 #line 214 "wktparse.y"
                                  { pop(); }
-#line 1955 "y.tab.c"
+#line 1917 "y.tab.c"
     break;
 
-  case 91:
+  case 91: /* $@25: %empty  */
 #line 216 "wktparse.y"
                          { set_zm(0, 1); alloc_multilinestring(); }
-#line 1961 "y.tab.c"
+#line 1923 "y.tab.c"
     break;
 
-  case 92:
+  case 92: /* geom_multilinestring: MULTILINESTRINGM $@25 multilinestring  */
 #line 217 "wktparse.y"
                                 { pop(); }
-#line 1967 "y.tab.c"
+#line 1929 "y.tab.c"
     break;
 
-  case 94:
+  case 94: /* $@26: %empty  */
 #line 222 "wktparse.y"
         { alloc_counter(); }
-#line 1973 "y.tab.c"
+#line 1935 "y.tab.c"
     break;
 
-  case 95:
+  case 95: /* multilinestring: $@26 LPAREN multilinestring_int RPAREN  */
 #line 222 "wktparse.y"
                                                               { pop();}
-#line 1979 "y.tab.c"
+#line 1941 "y.tab.c"
     break;
 
-  case 98:
+  case 98: /* $@27: %empty  */
 #line 232 "wktparse.y"
                    { alloc_multicurve(); }
-#line 1985 "y.tab.c"
+#line 1947 "y.tab.c"
     break;
 
-  case 99:
+  case 99: /* geom_multicurve: MULTICURVE $@27 multicurve  */
 #line 233 "wktparse.y"
                            { pop(); }
-#line 1991 "y.tab.c"
+#line 1953 "y.tab.c"
     break;
 
-  case 100:
+  case 100: /* $@28: %empty  */
 #line 235 "wktparse.y"
                     { set_zm(0, 1); alloc_multicurve(); }
-#line 1997 "y.tab.c"
+#line 1959 "y.tab.c"
     break;
 
-  case 101:
+  case 101: /* geom_multicurve: MULTICURVEM $@28 multicurve  */
 #line 236 "wktparse.y"
                            { pop(); }
-#line 2003 "y.tab.c"
+#line 1965 "y.tab.c"
     break;
 
-  case 103:
+  case 103: /* $@29: %empty  */
 #line 241 "wktparse.y"
         { alloc_counter(); }
-#line 2009 "y.tab.c"
+#line 1971 "y.tab.c"
     break;
 
-  case 104:
+  case 104: /* multicurve: $@29 LPAREN multicurve_int RPAREN  */
 #line 241 "wktparse.y"
                                                           { pop(); }
-#line 2015 "y.tab.c"
+#line 1977 "y.tab.c"
     break;
 
-  case 110:
+  case 110: /* $@30: %empty  */
 #line 257 "wktparse.y"
                  { set_zm(0, 1); }
-#line 2021 "y.tab.c"
+#line 1983 "y.tab.c"
     break;
 
-  case 114:
+  case 114: /* $@31: %empty  */
 #line 265 "wktparse.y"
         { alloc_polygon(); }
-#line 2027 "y.tab.c"
+#line 1989 "y.tab.c"
     break;
 
-  case 115:
+  case 115: /* empty_polygon: $@31 empty  */
 #line 265 "wktparse.y"
                                     { pop(); }
-#line 2033 "y.tab.c"
+#line 1995 "y.tab.c"
     break;
 
-  case 116:
+  case 116: /* $@32: %empty  */
 #line 268 "wktparse.y"
         { alloc_polygon(); }
-#line 2039 "y.tab.c"
+#line 2001 "y.tab.c"
     break;
 
-  case 117:
+  case 117: /* nonempty_polygon: $@32 polygon_1  */
 #line 268 "wktparse.y"
                                         { pop(); }
-#line 2045 "y.tab.c"
+#line 2007 "y.tab.c"
     break;
 
-  case 118:
+  case 118: /* $@33: %empty  */
 #line 271 "wktparse.y"
         { alloc_counter(); }
-#line 2051 "y.tab.c"
+#line 2013 "y.tab.c"
     break;
 
-  case 119:
+  case 119: /* polygon_1: $@33 LPAREN polygon_int RPAREN  */
 #line 271 "wktparse.y"
                                                        { pop();}
-#line 2057 "y.tab.c"
+#line 2019 "y.tab.c"
     break;
 
-  case 122:
+  case 122: /* $@34: %empty  */
 #line 281 "wktparse.y"
                      { alloc_curvepolygon(); }
-#line 2063 "y.tab.c"
+#line 2025 "y.tab.c"
     break;
 
-  case 123:
+  case 123: /* geom_curvepolygon: CURVEPOLYGON $@34 curvepolygon  */
 #line 281 "wktparse.y"
                                                             { pop(); }
-#line 2069 "y.tab.c"
+#line 2031 "y.tab.c"
     break;
 
-  case 124:
+  case 124: /* $@35: %empty  */
 #line 283 "wktparse.y"
                       { set_zm(0, 1); alloc_curvepolygon(); }
-#line 2075 "y.tab.c"
+#line 2037 "y.tab.c"
     break;
 
-  case 125:
+  case 125: /* geom_curvepolygon: CURVEPOLYGONM $@35 curvepolygon  */
 #line 284 "wktparse.y"
                                      { pop(); }
-#line 2081 "y.tab.c"
+#line 2043 "y.tab.c"
     break;
 
-  case 127:
+  case 127: /* $@36: %empty  */
 #line 289 "wktparse.y"
         { alloc_counter(); }
-#line 2087 "y.tab.c"
+#line 2049 "y.tab.c"
     break;
 
-  case 128:
+  case 128: /* curvepolygon: $@36 LPAREN curvepolygon_int RPAREN  */
 #line 289 "wktparse.y"
                                                             { pop(); }
-#line 2093 "y.tab.c"
+#line 2055 "y.tab.c"
     break;
 
-  case 133:
+  case 133: /* $@37: %empty  */
 #line 303 "wktparse.y"
                      { alloc_multipolygon(); }
-#line 2099 "y.tab.c"
+#line 2061 "y.tab.c"
     break;
 
-  case 134:
+  case 134: /* geom_multipolygon: MULTIPOLYGON $@37 multipolygon  */
 #line 303 "wktparse.y"
                                                             { pop(); }
-#line 2105 "y.tab.c"
+#line 2067 "y.tab.c"
     break;
 
-  case 135:
+  case 135: /* $@38: %empty  */
 #line 305 "wktparse.y"
                       { set_zm(0, 1); alloc_multipolygon(); }
-#line 2111 "y.tab.c"
+#line 2073 "y.tab.c"
     break;
 
-  case 136:
+  case 136: /* geom_multipolygon: MULTIPOLYGONM $@38 multipolygon  */
 #line 306 "wktparse.y"
                              { pop();}
-#line 2117 "y.tab.c"
+#line 2079 "y.tab.c"
     break;
 
-  case 138:
+  case 138: /* $@39: %empty  */
 #line 311 "wktparse.y"
         { alloc_counter(); }
-#line 2123 "y.tab.c"
+#line 2085 "y.tab.c"
     break;
 
-  case 139:
+  case 139: /* multipolygon: $@39 LPAREN multipolygon_int RPAREN  */
 #line 311 "wktparse.y"
                                                             { pop(); }
-#line 2129 "y.tab.c"
+#line 2091 "y.tab.c"
     break;
 
-  case 142:
+  case 142: /* $@40: %empty  */
 #line 321 "wktparse.y"
                      {alloc_multisurface(); }
-#line 2135 "y.tab.c"
+#line 2097 "y.tab.c"
     break;
 
-  case 143:
+  case 143: /* geom_multisurface: MULTISURFACE $@40 multisurface  */
 #line 321 "wktparse.y"
                                                            { pop(); }
-#line 2141 "y.tab.c"
+#line 2103 "y.tab.c"
     break;
 
-  case 144:
+  case 144: /* $@41: %empty  */
 #line 323 "wktparse.y"
                       { set_zm(0, 1); alloc_multisurface(); }
-#line 2147 "y.tab.c"
+#line 2109 "y.tab.c"
     break;
 
-  case 145:
+  case 145: /* geom_multisurface: MULTISURFACEM $@41 multisurface  */
 #line 324 "wktparse.y"
                              { pop(); }
-#line 2153 "y.tab.c"
+#line 2115 "y.tab.c"
     break;
 
-  case 147:
+  case 147: /* $@42: %empty  */
 #line 329 "wktparse.y"
         { alloc_counter(); }
-#line 2159 "y.tab.c"
+#line 2121 "y.tab.c"
     break;
 
-  case 148:
+  case 148: /* multisurface: $@42 LPAREN multisurface_int RPAREN  */
 #line 329 "wktparse.y"
                                                             { pop(); }
-#line 2165 "y.tab.c"
+#line 2127 "y.tab.c"
     break;
 
-  case 153:
+  case 153: /* $@43: %empty  */
 #line 343 "wktparse.y"
                            { alloc_geomertycollection(); }
-#line 2171 "y.tab.c"
+#line 2133 "y.tab.c"
     break;
 
-  case 154:
+  case 154: /* geom_geometrycollection: GEOMETRYCOLLECTION $@43 geometrycollection  */
 #line 344 "wktparse.y"
                                    { pop(); }
-#line 2177 "y.tab.c"
+#line 2139 "y.tab.c"
     break;
 
-  case 155:
+  case 155: /* $@44: %empty  */
 #line 346 "wktparse.y"
                             { set_zm(0, 1); alloc_geomertycollection(); }
-#line 2183 "y.tab.c"
+#line 2145 "y.tab.c"
     break;
 
-  case 156:
+  case 156: /* geom_geometrycollection: GEOMETRYCOLLECTIONM $@44 geometrycollection  */
 #line 347 "wktparse.y"
                                    { pop();}
-#line 2189 "y.tab.c"
+#line 2151 "y.tab.c"
     break;
 
-  case 158:
+  case 158: /* $@45: %empty  */
 #line 352 "wktparse.y"
         { alloc_counter(); }
-#line 2195 "y.tab.c"
+#line 2157 "y.tab.c"
     break;
 
-  case 159:
+  case 159: /* geometrycollection: $@45 LPAREN geometrycollection_int RPAREN  */
 #line 352 "wktparse.y"
                                                                   { pop(); }
-#line 2201 "y.tab.c"
+#line 2163 "y.tab.c"
     break;
 
-  case 166:
+  case 166: /* point_2d: VALUE VALUE  */
 #line 371 "wktparse.y"
                     {alloc_point_2d((yyvsp[-1].value),(yyvsp[0].value)); }
-#line 2207 "y.tab.c"
+#line 2169 "y.tab.c"
     break;
 
-  case 167:
+  case 167: /* point_3d: VALUE VALUE VALUE  */
 #line 374 "wktparse.y"
                           {alloc_point_3d((yyvsp[-2].value),(yyvsp[-1].value),(yyvsp[0].value)); }
-#line 2213 "y.tab.c"
+#line 2175 "y.tab.c"
     break;
 
-  case 168:
+  case 168: /* point_4d: VALUE VALUE VALUE VALUE  */
 #line 377 "wktparse.y"
                                 {alloc_point_4d((yyvsp[-3].value),(yyvsp[-2].value),(yyvsp[-1].value),(yyvsp[0].value)); }
-#line 2219 "y.tab.c"
+#line 2181 "y.tab.c"
     break;
 
-  case 169:
+  case 169: /* empty: EMPTY  */
 #line 380 "wktparse.y"
               { alloc_empty(); }
-#line 2225 "y.tab.c"
+#line 2187 "y.tab.c"
     break;
 
 
-#line 2229 "y.tab.c"
+#line 2191 "y.tab.c"
 
       default: break;
     }
@@ -2240,11 +2202,10 @@ yyreduce:
      case of YYERROR or YYBACKUP, subsequent parser actions might lead
      to an incorrect destructor call or verbose syntax error message
      before the lookahead is translated.  */
-  YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
+  YY_SYMBOL_PRINT ("-> $$ =", YY_CAST (yysymbol_kind_t, yyr1[yyn]), &yyval, &yyloc);
 
   YYPOPSTACK (yylen);
   yylen = 0;
-  YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
   *++yylsp = yyloc;
@@ -2269,50 +2230,15 @@ yyreduce:
 yyerrlab:
   /* Make sure we have latest lookahead translation.  See comments at
      user semantic actions for why this is necessary.  */
-  yytoken = yychar == YYEMPTY ? YYEMPTY : YYTRANSLATE (yychar);
-
+  yytoken = yychar == YYEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (yychar);
   /* If not already recovering from an error, report this error.  */
   if (!yyerrstatus)
     {
       ++yynerrs;
-#if ! YYERROR_VERBOSE
       yyerror (YY_("syntax error"));
-#else
-# define YYSYNTAX_ERROR yysyntax_error (&yymsg_alloc, &yymsg, \
-                                        yyssp, yytoken)
-      {
-        char const *yymsgp = YY_("syntax error");
-        int yysyntax_error_status;
-        yysyntax_error_status = YYSYNTAX_ERROR;
-        if (yysyntax_error_status == 0)
-          yymsgp = yymsg;
-        else if (yysyntax_error_status == 1)
-          {
-            if (yymsg != yymsgbuf)
-              YYSTACK_FREE (yymsg);
-            yymsg = YY_CAST (char *, YYSTACK_ALLOC (YY_CAST (YYSIZE_T, yymsg_alloc)));
-            if (!yymsg)
-              {
-                yymsg = yymsgbuf;
-                yymsg_alloc = sizeof yymsgbuf;
-                yysyntax_error_status = 2;
-              }
-            else
-              {
-                yysyntax_error_status = YYSYNTAX_ERROR;
-                yymsgp = yymsg;
-              }
-          }
-        yyerror (yymsgp);
-        if (yysyntax_error_status == 2)
-          goto yyexhaustedlab;
-      }
-# undef YYSYNTAX_ERROR
-#endif
     }
 
   yyerror_range[1] = yylloc;
-
   if (yyerrstatus == 3)
     {
       /* If just tried and failed to reuse lookahead token after an
@@ -2345,6 +2271,7 @@ yyerrorlab:
      label yyerrorlab therefore never appears in user code.  */
   if (0)
     YYERROR;
+  ++yynerrs;
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
@@ -2361,13 +2288,14 @@ yyerrorlab:
 yyerrlab1:
   yyerrstatus = 3;      /* Each real token shifted decrements this.  */
 
+  /* Pop stack until we find a state that shifts the error token.  */
   for (;;)
     {
       yyn = yypact[yystate];
       if (!yypact_value_is_default (yyn))
         {
-          yyn += YYTERROR;
-          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
+          yyn += YYSYMBOL_YYerror;
+          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYSYMBOL_YYerror)
             {
               yyn = yytable[yyn];
               if (0 < yyn)
@@ -2381,7 +2309,7 @@ yyerrlab1:
 
       yyerror_range[1] = *yylsp;
       yydestruct ("Error: popping",
-                  yystos[yystate], yyvsp, yylsp);
+                  YY_ACCESSING_SYMBOL (yystate), yyvsp, yylsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -2392,13 +2320,11 @@ yyerrlab1:
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
   yyerror_range[2] = yylloc;
-  /* Using YYLLOC is tempting, but would change the location of
-     the lookahead.  YYLOC is available though.  */
-  YYLLOC_DEFAULT (yyloc, yyerror_range, 2);
-  *++yylsp = yyloc;
+  ++yylsp;
+  YYLLOC_DEFAULT (*yylsp, yyerror_range, 2);
 
   /* Shift the error token.  */
-  YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
+  YY_SYMBOL_PRINT ("Shifting", YY_ACCESSING_SYMBOL (yyn), yyvsp, yylsp);
 
   yystate = yyn;
   goto yynewstate;
@@ -2409,7 +2335,7 @@ yyerrlab1:
 `-------------------------------------*/
 yyacceptlab:
   yyresult = 0;
-  goto yyreturn;
+  goto yyreturnlab;
 
 
 /*-----------------------------------.
@@ -2417,24 +2343,22 @@ yyacceptlab:
 `-----------------------------------*/
 yyabortlab:
   yyresult = 1;
-  goto yyreturn;
+  goto yyreturnlab;
 
 
-#if !defined yyoverflow || YYERROR_VERBOSE
-/*-------------------------------------------------.
-| yyexhaustedlab -- memory exhaustion comes here.  |
-`-------------------------------------------------*/
+/*-----------------------------------------------------------.
+| yyexhaustedlab -- YYNOMEM (memory exhaustion) comes here.  |
+`-----------------------------------------------------------*/
 yyexhaustedlab:
   yyerror (YY_("memory exhausted"));
   yyresult = 2;
-  /* Fall through.  */
-#endif
+  goto yyreturnlab;
 
 
-/*-----------------------------------------------------.
-| yyreturn -- parsing is finished, return the result.  |
-`-----------------------------------------------------*/
-yyreturn:
+/*----------------------------------------------------------.
+| yyreturnlab -- parsing is finished, clean up and return.  |
+`----------------------------------------------------------*/
+yyreturnlab:
   if (yychar != YYEMPTY)
     {
       /* Make sure we have latest lookahead translation.  See comments at
@@ -2450,19 +2374,17 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  yystos[+*yyssp], yyvsp, yylsp);
+                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp, yylsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
   if (yyss != yyssa)
     YYSTACK_FREE (yyss);
 #endif
-#if YYERROR_VERBOSE
-  if (yymsg != yymsgbuf)
-    YYSTACK_FREE (yymsg);
-#endif
+
   return yyresult;
 }
+
 #line 381 "wktparse.y"
 
 

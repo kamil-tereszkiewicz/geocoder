@@ -61,11 +61,16 @@ geocode <- function(addr_string) {
 
   l_stderrCnt <- incCnt() 
   # print(l_stderrCnt)
-  stderrFn <- sprintf("geoLog%d.log", l_stderrCnt)
+  stderrFn <- sprintf("./delme/geoLog%d.log", l_stderrCnt)
+  # stderrFn <- sprintf("geoLog%d.log", l_stderrCnt)
   # cli::cli_alert_info(sprintf("%d. sterr fn: %s",l_stderrCnt, stderrFn), wrap = TRUE)
 
+  print(addr_string)
+
+
   out <- system2("ruby",
-    args = c("/app/geocode.rb", shQuote(addr_string)),
+    # args = c("/app/geocode.rb", shQuote(addr_string)),
+    args = c("./geocode.rb", shQuote(addr_string)),
     # stderr = FALSE,
     stderr = stderrFn,
     # stderr = TRUE,
