@@ -1,0 +1,26 @@
+# inherit_from: ../.rubocop.yml
+
+Style/Documentation:
+  Enabled: false
+
+Style/Encoding:
+  Enabled: true
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 99
+
+Metrics/AbcSize:
+  Enabled: true
+  Max: 50
+
+Layout/LineLength:
+  Enabled: true
+  Max: 99
+
+Naming/ConstantName:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: true
+  MinNameLength: 2

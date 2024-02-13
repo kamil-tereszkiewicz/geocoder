@@ -1,0 +1,29 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+
+    "[ruby]": {
+      "editor.formatOnPaste": false,
+      "editor.formatOnSave": false,
+      "editor.formatOnType": false,
+      "editor.defaultFormatter": "Shopify.ruby-lsp"
+    },
+    "[r]": {
+      "editor.formatOnPaste": false,
+      "editor.formatOnSave": false,
+      "editor.formatOnType": false
+    },
+    "[makefile]": {
+      "editor.formatOnPaste": false,
+      "editor.formatOnSave": false,
+      "editor.formatOnType": false
+    }
+  }
+}
