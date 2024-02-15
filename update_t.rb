@@ -82,7 +82,7 @@ def fill_my_columns(db)
   measure :fill_my_col, db, "norm_street", sql
 end
 
-def drop_my_indexes
+def drop_my_indexes(db)
   sql = "DROP INDEX IF EXISTS "
   indexName = "feature_clear_street_phone_zip_idx"
 
