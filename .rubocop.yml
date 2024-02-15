@@ -79,10 +79,8 @@ Layout/SpaceAroundEqualsInParameterDefault:
 Style/AndOr:
   Enabled: false
 
-
 Style/CaseLikeIf:
   Enabled: false
-
 
 Style/NegatedUnless:
   Enabled: false
@@ -166,4 +164,13 @@ Style/IfUnlessModifier:
   Enabled: false
 
 Style/GuardClause:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
+Style/RedundantFileExtensionInRequire:
   Enabled: false

@@ -180,10 +180,10 @@ module Geocoder::US
       end
       if state.nil? or state.empty?
         and_state = ""
-        args = [city] + tokens.clone
+        args = [city, city] + tokens.clone
       else
         and_state = "AND state = ?"
-        args = [city] + tokens.clone + [state]
+        args = [city, city] + tokens.clone + [state]
       end
       metaphones = metaphone_placeholders_for tokens
 
@@ -191,7 +191,7 @@ module Geocoder::US
 
       # $stderr.puts "places_by_city: city: #{city} metaphones tokens: #{tokens}, state_arg: #{state}, args: #{args}\n    #{sql}"
       
-      execute("SELECT *, levenshtein(?, city) AS city_score
+      execute("SELECT *, levenshtein(?, city) AS city_score, ? as tested_city
                 FROM place WHERE city_phone IN (#{metaphones}) #{and_state} order by priority desc;", *args)
     end
 
@@ -217,10 +217,10 @@ module Geocoder::US
       printMetaphones "street", tokens
 
       sql = "
-        SELECT feature.*, levenshtein(?, street) AS street_score
+        SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street
           FROM feature
           WHERE street_phone IN (#{metaphones})"
-      params = [street] + tokens
+      params = [street, street] + tokens
       return [sql, params]
     end
 
@@ -231,10 +231,10 @@ module Geocoder::US
       printMetaphones "street", tokens
 
       sql = "
-        SELECT feature.*, levenshtein(?, street) AS street_score
+        SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street, 1 via_clear_street
           FROM feature
           WHERE clear_street_phone IN (#{metaphones})"
-      params = [street] + tokens
+      params = [street, street] + tokens
       return [sql, params]
     end
 
@@ -436,7 +436,8 @@ module Geocoder::US
       places = []
       candidates = []
 
-      # TODO: wouldn't it be more accuret if we sent the longest part? in which case the score would be lower but there would be higher possibility that we include actual city in the scored text.
+      # TODO: this often ends up as a state 
+      # (when passed addres contains state name, not an abbreviation), see @full_state
       city = address.city.sort {|a,b|a.length <=> b.length}[0] 
       if(!address.zip.empty? && !address.zip.nil?)
          places = places_by_zip city, address.zip 

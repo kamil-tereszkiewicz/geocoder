@@ -9,7 +9,16 @@
       "name": "Debug",
       "request": "launch",
       // "program": "ruby ${workspaceFolder}/geocode.rb \"11961 1ST AV SYCAMORE TOWNSHIP OH 45249\""
-      "program": "ruby ${workspaceFolder}/geocode.rb \"4545 Point Fosdick Dr Gig Harbor Washington 98335\""
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"4545 POINT FOSDICK DR GIG HARBOR WASHINGTON 98335\""
+      "program": "ruby ${workspaceFolder}/geocode.rb \"4545 POINT FOSDICK DR GIG HARBOR WA 98335\""
+    },
+  {
+      "type": "ruby_lsp",
+      "name": "Debug update db",
+      "request": "launch",
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"11961 1ST AV SYCAMORE TOWNSHIP OH 45249\""
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"4545 POINT FOSDICK DR GIG HARBOR WASHINGTON 98335\""
+      "program": "ruby ${workspaceFolder}/update_t.rb ../geocoder.db"
     }
   ]
 }

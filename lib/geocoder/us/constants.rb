@@ -11,16 +11,24 @@ module Geocoder::US
     # and their fully written equivalents.
     #attr_accessor :partial
     attr_accessor :regexp, :regexp_words
+    attr_accessor :base_hash
 
     def self.[] (*items)
       hash = super(*items)
+      hash.save_base_hash
       #hash.build_partial
       hash.build_match
-      hash.build_match_words # 
+      # hash.build_match_words # 
       hash.keys.each {|k| hash[k.downcase] = hash.fetch(k)}
       hash.values.each {|v| hash[v.downcase] = v}
       hash.freeze
     end
+
+    def save_base_hash
+      @base_hash = clone
+      @base_hash.freeze
+    end
+
     # The build_partial method constructs a hash of case-insensitive,
     # whitespace-delimited prefixes to keys and values in the two-way Map.
     def build_partial
@@ -30,13 +38,13 @@ module Geocoder::US
         item.downcase.split.each {|token| @partial << token}
       }
     end
-    def build_match_words
-      # str = '\b(' + [values].flatten.join("|") + ')\b'
-      str = '\b(' + [keys].flatten.join("|") + ')\b'
-      @regexp_words  = Regexp.new(str, Regexp::IGNORECASE)
+    # def build_match_words
+    #   # str = '\b(' + [values].flatten.join("|") + ')\b'
+    #   str = '\b(' + [keys].flatten.join("|") + ')\b'
+    #   @regexp_words  = Regexp.new(str, Regexp::IGNORECASE)
 
-      # $stderr.puts "build_match_words: #{@regexp_words.inspect}"
-    end    
+    #   # $stderr.puts "build_match_words: #{@regexp_words.inspect}"
+    # end    
 
     def build_match
       @regexp = Regexp.new(

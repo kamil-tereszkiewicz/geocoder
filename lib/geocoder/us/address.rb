@@ -159,7 +159,17 @@ module Geocoder::US
       idx = text.rindex(regex_match)
       text[idx...idx+regex_match.length] = ""
       text.sub! /\s*,?\s*$/o, ""
+
+      # /////////><
+      # tmp_full_state = State_Abbr_Full[@state[0].strip.downcase]
+      # if tmp_full_state.nil? || tmp_full_state.empty?
+      #   @full_state = @state[0].strip
+      # else 
+      #   @full_state = tmp_full_state
+      # end
+      # /////////><
       @full_state = @state[0].strip # special case: New York
+      # /////////><
       @state = State[@full_state]
       text
     end
@@ -225,7 +235,7 @@ module Geocoder::US
       @city << @full_state if @state.downcase != @full_state.downcase 
     end
     
-    def expand_streets(street)
+    def expand_streets(street) # this is also used to expand cities after placec_by_zip
       if !street.empty? && !street[0].nil?
         street.map! {|s|s.strip}
         add = street.map {|item| item.gsub(Name_Abbr.regexp) {|m| Name_Abbr[m].downcase}}
