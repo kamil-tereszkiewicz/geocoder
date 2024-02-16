@@ -225,7 +225,7 @@ module Geocoder::US
       _print_metaphones "street", tokens
 
       sql = "
-        SELECT feature.*, levenshtein(?, norm_street) AS street_score, ? tested_street_against_norm
+        SELECT feature.*, levenshtein(?, norm_street) AS street_score, ? tested_street, 1 via_n_c_street
           FROM feature
           WHERE clear_street_phone IN (#{metaphones})" # TODO: use clear_street_phone
       params = [street, street] + tokens
@@ -239,7 +239,7 @@ module Geocoder::US
       _print_metaphones "street", tokens
 
       sql = "
-        SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street, 1 via_clear_street
+        SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street, 1 via_c_street
           FROM feature
           WHERE clear_street_phone IN (#{metaphones})"
       params = [street, street] + tokens
