@@ -224,6 +224,20 @@ module Geocoder::US
       return [sql, params]
     end
 
+    # copy of features_by_street but using norm_street
+    def fetures_by_norm_and_clear_street (street, tokens)
+      metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
+
+      printMetaphones "street", tokens
+
+      sql = "
+        SELECT feature.*, levenshtein(?, norm_street) AS street_score, ? tested_street_against_norm
+          FROM feature
+          WHERE clear_street_phone IN (#{metaphones})" # TODO: use clear_street_phone
+      params = [street, street] + tokens
+      return [sql, params]
+    end
+
     # copy of the feature_by_street but using clear_street_phone
     def features_by_clear_street (street, tokens)
       metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
@@ -247,6 +261,19 @@ module Geocoder::US
       warn "__ features_by_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
       sql, params = features_by_street(street, tokens)
+      in_list = placeholders_for zips
+      sql    += " AND feature.zip IN (#{in_list})"
+      params += zips
+
+      execute sql, *params
+    end
+    
+    # copy of features_by_street_and_zip but using norm_street
+    def fetures_by_norm_and_clear_street_and_zip (street, tokens, zips, address)
+
+      warn "__ fetures_by_norm_and_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
+
+      sql, params = fetures_by_norm_and_clear_street(street, tokens)
       in_list = placeholders_for zips
       sql    += " AND feature.zip IN (#{in_list})"
       params += zips
@@ -325,7 +352,7 @@ module Geocoder::US
               GROUP BY tlid, side;"
       warn "__ range_ends"
       execute(sql, *edge_ids).map {|r|
-	if r[:flipped].to_i == 1
+  if r[:flipped].to_i == 1
           r[:flipped] = true
           r[:fromhn], r[:tohn] = r[:from1], r[:to1]
         else
@@ -463,21 +490,14 @@ module Geocoder::US
 
       _print_candidates candidates
 
-      # # $stderr.puts "__ find_candidates: 2.1 candidates: #{candidates.length}"
-      # $stderr.puts "__ find_candidates: 2.1 candidates: #{candidates.inspect}"
-
       ##############################################################################################################
-      # if false and candidates.empty?
-        
-      #   tokens = address.street_parts_with_some_noise
+      if candidates.empty?
+        tokens = address.street_parts
+        warn "__ find_candidates: 2.1.1 using norm/clear street: #{tokens.inspect}"
+        candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips, address
+        _print_candidates candidates
+      end
 
-      #   $stderr.puts "__ find_candidates: 2.1.1 tokens with NOISE with abbr: #{tokens.inspect}"
-      #   candidates = features_by_street_and_zip street, tokens, zips, address
-
-      #   $stderr.puts "__ find_candidates: 2.1.1 EXPANDED TOKENS candidates: #{candidates.length}"
-      #   $stderr.puts "__ find_candidates: 2.1.1 EXPANDED TOKENS candidates: #{candidates.inspect}"
-      # end
-      ##############################################################################################################
       ############################################################################################################## 2
       if candidates.empty?
         tokens = address.street_parts
