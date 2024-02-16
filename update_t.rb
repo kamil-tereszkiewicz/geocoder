@@ -75,7 +75,7 @@ def fill_my_columns(db)
   sql = "update feature set clear_street = clear_my_street(street) where street is not null #{REFILL_MY_COLS ? '' : 'and clear_street is null'};"
   measure :fill_my_col, db, "clear_street", sql
 
-  sql = "update feature set clear_street_phone = metaphone(clear_street) where clear_street is not null #{REFILL_MY_COLS ? '' : 'and clear_street_phone is null'};"
+  sql = "update feature set clear_street_phone = metaphone(clear_street, 5) where clear_street is not null #{REFILL_MY_COLS ? '' : 'and clear_street_phone is null'};"
   measure :fill_my_col, db, "clear_street_phone", sql
 
   sql = "update feature set norm_street = normalize_my_street(street) where street is not null #{REFILL_MY_COLS ? '' : 'and norm_street is null'};"
@@ -86,9 +86,9 @@ def drop_my_indexes(db)
   sql = "DROP INDEX IF EXISTS "
   indexName = "feature_clear_street_phone_zip_idx"
 
-      puts "dropping index: #{indexName}..."
-      results = db.execute "#{sql} #{indexName};"
-      puts "dropped index: #{indexName}"
+  puts "dropping index: #{indexName}..."
+  results = db.execute "#{sql} #{indexName};"
+  puts "dropped index: #{indexName}"
 
   # indexName = "feature_norm_street_zip_idx"
   #     puts "dropping index: #{indexName}..."
@@ -113,6 +113,8 @@ def add_my_indexes(db)
 end
 
     def normalize_street(string)
+
+      string.force_encoding('utf-8')
       tokens = string.split(' ')
 
       # warn "normalize base hash: #{Geocoder::US::Directional.base_hash}"
