@@ -28,21 +28,13 @@ module Geocoder::US
     def initialize(text)
       raise ArgumentError, "no text provided" unless text and !text.empty?
 
-      # if text.include?('KTKT')
-      #   $stderr.print "\n:setValues text: #{text}"
-      #   text = text.sub('KTKT', '')
-      #   @text = text
-
-      #   set_values("4545", "Point Fosdick", "Gig Harbor", "Washington", "98335")
-      # else 
-        warn "------------------- addrss: initialize: text: #{text}"
-        if text.class == Hash
-          @text = ""
-          assign_text_to_address text
-        else
-          @text = clean text
-          parse
-        # end
+      warn "------------------- addrss: initialize: text: #{text}"
+      if text.class == Hash
+        @text = ""
+        assign_text_to_address text
+      else
+        @text = clean text
+        parse
       end
     end
 
@@ -53,21 +45,6 @@ module Geocoder::US
            .gsub(/\s+/o, " ")
     end
 
-    # def set_values(_nr, _street, _city, _state, _zip)
-    #   # @text = [_street, _city, _state, _zip].join(", ")
-    #   # @full_state = clean _state.downcase
-    #   @full_state = clean _state.downcase
-    #   # @street = [clean(_street.downcase)]
-    #   @street = ["point fosdick gig harbor", "pt fosdick gig harbor"]
-    #   @city = [clean(_city.downcase), @full_state]
-    #   @state = State[@full_state]
-    #   @zip = clean _zip.downcase
-    #   @prenum = nil
-    #   @plus4 = nil
-    #   @number = _nr
-    #   @sufnum = nil
-    # end
-   
    
     def assign_text_to_address(text)
       if text[:address]
@@ -242,22 +219,20 @@ module Geocoder::US
         street |= add
         add = street.map {|item| item.gsub(Std_Abbr.regexp) {|m| Std_Abbr[m].downcase}}
         street |= add
-        
         street.map! {|item| expand_numbers(item)}
         street.flatten!
         street.map! {|s| s.downcase}
 
-        # TODO: for: 4545 Point Fosdick Dr Gig Harbor Washington 98335, we are missing "pt forsick drive...".
+        # TODO: for: 4545 Point Fosdick Dr Gig Harbor Washington 98335, we are missing "pt forsick drive..." and mb some other combinations.
         # [
         #   "point fosdick dr gig harbor", 
         #   "point fosdick drive gig harbor", 
         #   "pt fosdick dr gig harbor", 
         #   "pt fosdick dr gig harbor"
         # ]
-
+        #
         # we could change the function, it should span like a tree, when we replace, we should retain the source word
         # and create new branch with the replacement.
-
 
         street.uniq!
       else
@@ -278,86 +253,9 @@ module Geocoder::US
 
       # Try a simpler case of adding the @number in case everything is an abbr.
       strings += [@number] if strings.all? {|s| Std_Abbr.key? s or Name_Abbr.key? s}
-      good_strings = strings.uniq
-      # $stderr.puts "street_parts: \n@street: #{@street}, \nstrings: #{strings}, \ngood_strings: #{good_strings}"
 
-      good_strings
+      strings.uniq
     end
-
-    # def street_parts_with_some_noise_abbr
-    #   strings = []
-    #   # Get all the substrings delimited by whitespace
-    #   @street.each {|string|
-    #     tokens = string.split(" ")
-    #     strings |= (0...tokens.length).map {|i|
-    #                (i...tokens.length).map {|j| tokens[i..j].join(" ")}}.flatten
-    #   }
-    #   strings = remove_some_noise_words(strings)
-
-    #   # Try a simpler case of adding the @number in case everything is an abbr.
-    #   strings += [@number] if strings.all? {|s| Std_Abbr.key? s or Name_Abbr.key? s}
-    #   good_strings = strings.uniq
-    #   # $stderr.puts "street_parts_with_some_noise: \n@street: #{@street}, \nstrings: #{strings}, \ngood_strings: #{good_strings}"
-
-    #   good_strings
-    # end
-
-    # # ____________________________________________________________________
-    # def street_parts_with_some_noise
-    #   strings = []
-    #   # Get all the substrings delimited by whitespace
-    #   @street.each {|string|
-    #     tokens = string.split(" ")
-    #     strings |= (0...tokens.length).map {|i|
-    #                (i...tokens.length).map {|j| tokens[i..j].join(" ")}}.flatten
-    #   }
-    #   strings = remove_some_noise_words(strings)
-
-    #   # Try a simpler case of adding the @number in case everything is an abbr.
-    #   strings += [@number] if strings.all? {|s| Std_Abbr.key? s or Name_Abbr.key? s}
-    #   good_strings = strings.uniq
-    #   # $stderr.puts "street_parts_with_some_noise: \n@street: #{@street}, \nstrings: #{strings}, \ngood_strings: #{good_strings}"
-
-    #   good_strings
-    # end
-
-    # def remove_some_noise_words(strings)
-
-    #   # $stderr.puts "__ ________________________remove_some_noise_words: #{strings.inspect}"
-
-    #   # Don't return strings that consist solely of abbreviations.
-    #   # NOTE: Is this a micro-optimization that has edge cases that will break?
-    #   # Answer: Yes, it breaks on simple things like "Prairie St" or "Front St"
-
-    #   # prefix = Regexp.new("^" + Prefix_Type.regexp.source + "\s*", Regexp::IGNORECASE)
-    #   suffix = Regexp.new("\s*" + Suffix_Type.regexp.source + "$", Regexp::IGNORECASE)
-    #   predxn = Regexp.new("^" + Directional.regexp.source + "\s*", Regexp::IGNORECASE)
-    #   sufdxn = Regexp.new("\s*" + Directional.regexp.source + "$", Regexp::IGNORECASE)
-
-    #   #------
-    #   # Prefix_Type.build_match_words
-    #   # prefix_words = Regexp.new("^" + Prefix_Type.regexp_words.source + "\s*", Regexp::IGNORECASE)
-    #   prefix_words = Regexp.new("^" + Prefix_Type.regexp_words.source + "\s*", Regexp::IGNORECASE)
-    #   # suffix_words = Regexp.new("\s*" + Suffix_Type.regexp_words.source + "$", Regexp::IGNORECASE)
-
-    #   # $stderr.puts "__ remove_some_noise_words: prefix_words: #{prefix_words.inspect}"
-    #   #------
-
-    #   good_strings = strings.map {|s|
-    #     s = s.clone
-    #     s.gsub!(predxn, "")
-    #     s.gsub!(sufdxn, "")
-    #     s.gsub!(prefix_words, "")
-    #     # s.gsub!(suffix_words, "")
-    #     s.gsub!(suffix, "")
-    #     s
-    #   }
-    #   good_strings.reject! {|s| s.empty?}
-    #   strings = good_strings if !good_strings.empty? {|s| not Std_Abbr.key?(s) and not Name_Abbr.key?(s)}
-    #   # $stderr.puts "__ ________________________remove_some_noise_words: #{strings.inspect}"
-    #   strings
-    # end
-    # # ____________________________________________________________________
 
     def remove_noise_words(strings)
       # Don't return strings that consist solely of abbreviations.
@@ -368,7 +266,6 @@ module Geocoder::US
       predxn = Regexp.new("^" + Directional.regexp.source + "\s*", Regexp::IGNORECASE)
       sufdxn = Regexp.new("\s*" + Directional.regexp.source + "$", Regexp::IGNORECASE)
 
-      
       # $stderr.puts "__ remove_noise_words: prefix: #{prefix.inspect}"
 
       good_strings = strings.map {|s|

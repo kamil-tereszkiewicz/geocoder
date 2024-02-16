@@ -10,7 +10,7 @@ module Geocoder::US
     # The Map class provides a two-way mapping between postal abbreviations
     # and their fully written equivalents.
     #attr_accessor :partial
-    attr_accessor :regexp, :regexp_words
+    attr_accessor :regexp
     attr_accessor :base_hash
 
     def self.[] (*items)
@@ -18,7 +18,6 @@ module Geocoder::US
       hash.save_base_hash
       #hash.build_partial
       hash.build_match
-      # hash.build_match_words # 
       hash.keys.each {|k| hash[k.downcase] = hash.fetch(k)}
       hash.values.each {|v| hash[v.downcase] = v}
       hash.freeze
@@ -38,13 +37,6 @@ module Geocoder::US
         item.downcase.split.each {|token| @partial << token}
       }
     end
-    # def build_match_words
-    #   # str = '\b(' + [values].flatten.join("|") + ')\b'
-    #   str = '\b(' + [keys].flatten.join("|") + ')\b'
-    #   @regexp_words  = Regexp.new(str, Regexp::IGNORECASE)
-
-    #   # $stderr.puts "build_match_words: #{@regexp_words.inspect}"
-    # end    
 
     def build_match
       @regexp = Regexp.new(

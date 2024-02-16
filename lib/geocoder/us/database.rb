@@ -187,25 +187,19 @@ module Geocoder::US
       end
       metaphones = metaphone_placeholders_for tokens
 
-      printMetaphones "city", tokens
-
-      # $stderr.puts "places_by_city: city: #{city} metaphones tokens: #{tokens}, state_arg: #{state}, args: #{args}\n    #{sql}"
+      _print_metaphones "city", tokens
       
       execute("SELECT *, levenshtein(?, city) AS city_score, ? as tested_city
                 FROM place WHERE city_phone IN (#{metaphones}) #{and_state} order by priority desc;", *args)
     end
 
+    def _print_metaphones (label, params)
+      metaphones = params.map.with_index{|_,i| " metaphone(?,5) t_" + i.to_s }.join ","
+      sqlM = "select #{metaphones};"
 
-      # #################################### kt
-      def printMetaphones (label, params)
-        #  (["metaphone(?,5)"] * list.length).join(",")
-
-        metaphones = params.map.with_index{|_,i| " metaphone(?,5) t_" + i.to_s }.join ","
-        sqlM = "select #{metaphones};"
-
-        rowsM = execute sqlM, *params
-        warn " __ metaphones: #{label}: \n  #{params.inspect}\n  #{rowsM.inspect}"
-      end
+      rowsM = execute sqlM, *params
+      warn " __ metaphones: #{label}: \n  #{params.inspect}\n  #{rowsM.inspect}"
+    end
 
     # Generate an SQL query and set of parameters against the feature and range
     # tables for a street name and optional building number. The SQL is
@@ -214,7 +208,7 @@ module Geocoder::US
     def features_by_street (street, tokens)
       metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
 
-      printMetaphones "street", tokens
+      _print_metaphones "street", tokens
 
       sql = "
         SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street
@@ -228,7 +222,7 @@ module Geocoder::US
     def fetures_by_norm_and_clear_street (street, tokens)
       metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
 
-      printMetaphones "street", tokens
+      _print_metaphones "street", tokens
 
       sql = "
         SELECT feature.*, levenshtein(?, norm_street) AS street_score, ? tested_street_against_norm
@@ -242,7 +236,7 @@ module Geocoder::US
     def features_by_clear_street (street, tokens)
       metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
 
-      printMetaphones "street", tokens
+      _print_metaphones "street", tokens
 
       sql = "
         SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street, 1 via_clear_street
@@ -256,7 +250,7 @@ module Geocoder::US
     # building number, street name, and list of candidate ZIP codes.
     # The metaphone and ZIP code indexes on the feature table are
     # used to match results.
-    def features_by_street_and_zip (street, tokens, zips, address)
+    def features_by_street_and_zip (street, tokens, zips)
 
       warn "__ features_by_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
@@ -269,7 +263,7 @@ module Geocoder::US
     end
     
     # copy of features_by_street_and_zip but using norm_street
-    def fetures_by_norm_and_clear_street_and_zip (street, tokens, zips, address)
+    def fetures_by_norm_and_clear_street_and_zip (street, tokens, zips)
 
       warn "__ fetures_by_norm_and_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
@@ -282,7 +276,7 @@ module Geocoder::US
     end
     
     # copy of the features_by_street_and_zip but using clear_street_phone
-    def features_by_clear_street_and_zip (street, tokens, zips, address)
+    def features_by_clear_street_and_zip (street, tokens, zips)
 
       warn "__ features_by_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
@@ -298,7 +292,7 @@ module Geocoder::US
     # building number, street name, and list of candidate ZIP codes.
     # The ZIP codes are reduced to a set of 3-digit prefixes, broadening
     # the search area.
-    def more_features_by_street_and_zip (street, tokens, zips, address)
+    def more_features_by_street_and_zip (street, tokens, zips)
       sql, params = features_by_street(street, tokens)
       if !zips.empty? and !zips[0].nil?
         # puts "zip results 2"
@@ -486,7 +480,7 @@ module Geocoder::US
 
       warn "__ find_candidates: zips base on places: #{zips}"
       street = address.street.sort {|a,b|a.length <=> b.length}[0]
-      candidates = features_by_street_and_zip street, address.street_parts, zips, address
+      candidates = features_by_street_and_zip street, address.street_parts, zips
 
       _print_candidates candidates
 
@@ -494,7 +488,7 @@ module Geocoder::US
       if candidates.empty?
         tokens = address.street_parts
         warn "__ find_candidates: 2.1.1 using norm/clear street: #{tokens.inspect}"
-        candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips, address
+        candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips
         _print_candidates candidates
       end
 
@@ -502,14 +496,14 @@ module Geocoder::US
       if candidates.empty?
         tokens = address.street_parts
         warn "__ find_candidates: 2.1.2 using clear street: #{tokens.inspect}"
-        candidates = features_by_clear_street_and_zip street, tokens, zips, address
+        candidates = features_by_clear_street_and_zip street, tokens, zips
         _print_candidates candidates
       end
       ##############################################################################################################
 
       if candidates.empty?
-        candidates = more_features_by_street_and_zip street, address.street_parts, zips, address
         warn "__ find_candidates: 2.2 more candidates relaxed zip: #{candidates.length}"
+        candidates = more_features_by_street_and_zip street, address.street_parts, zips
         _print_candidates candidates
       end
 
@@ -921,27 +915,24 @@ module Geocoder::US
     #   components of the address and place name.
     def geocode (info_to_geocode, canonical_place=false)
       address = Address.new info_to_geocode
-      # open('../../../aa.out', 'a') { |f|
-      #   f.puts "ADDR: #{address.inspect}"
-      # }
-      $stderr.print "__ ADDR: #{address.inspect}\n" 
+      $stderr.print "ADDR: #{address.inspect}\n" if @debug
       return [] if address.city.empty? and address.zip.empty?
       results = []
       start_time = Time.now if @debug
       if address.po_box? and !address.zip.empty?
-        warn "1 - po_box"
+        warn "geocode: 1 - po_box"
         results = geocode_place address, canonical_place
       end
       if address.intersection? and !address.street.empty? and address.number.empty?
-        warn "2 - intersection"
+        warn "geocode: 2 - intersection"
         results = geocode_intersection address, canonical_place
       end
       if results.empty? and !address.street.empty?
-        warn "3 address"
+        warn "geocode: 3 address"
         results = geocode_address address, canonical_place
       end
       if results.empty?
-        warn "4 place"
+        warn "geocode: 4 place"
         results = geocode_place address, canonical_place
       end
       if @debug
