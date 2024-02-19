@@ -61,8 +61,8 @@ geocode <- function(addr_string) {
 
   l_stderrCnt <- incCnt() 
   # print(l_stderrCnt)
-  stderrFn <- sprintf("./delme/geoLog%d.log", l_stderrCnt)
-  # stderrFn <- sprintf("geoLog%d.log", l_stderrCnt)
+  # stderrFn <- sprintf("./delme/geoLog%d.log", l_stderrCnt)
+  stderrFn <- sprintf("geoLog%d.log", l_stderrCnt)
   # cli::cli_alert_info(sprintf("%d. sterr fn: %s",l_stderrCnt, stderrFn), wrap = TRUE)
 
   print(addr_string)

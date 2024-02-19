@@ -2,6 +2,8 @@
 
 > TODO: oneliner here
 
+! `entrypoint.R` ensure: parallel and cache is set to TRUE, and the stderr is not forwarded
+
 ## Build images
 
 The `./.Dockerfile` was split into two files: `./from.Dockerfile` and `./my.Dockerfile` to save time on reinstalling all of the stuff. The `./from.Dockerfile` needs to be build just once, then we can just rebuild the `./my.Dockerfile` image to be able to run modified ruby/R code.
