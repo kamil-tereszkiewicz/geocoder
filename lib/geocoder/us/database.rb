@@ -198,7 +198,7 @@ module Geocoder::US
       sqlM = "select #{metaphones};"
 
       rowsM = execute sqlM, *params
-      warn " __ metaphones: #{label}: \n  #{params.inspect}\n  #{rowsM.inspect}"
+      warn " __ metaphones of: #{label}: \n  #{params.inspect}\n  #{rowsM.inspect}"
     end
 
     # Generate an SQL query and set of parameters against the feature and range

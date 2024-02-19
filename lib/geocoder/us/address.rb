@@ -208,7 +208,7 @@ module Geocoder::US
       end
 
       # SPECIAL CASE: no city, but a state with the same name. e.g. "New York"
-      # TODO: we are adding state here - unnecessady in some cases, does this happen when we use full state in the address?
+      # TODO: kt: we are adding state here - unnecessady in some cases, it looks like it happen when we pass full state in the address?
       @city << @full_state if @state.downcase != @full_state.downcase 
     end
     
