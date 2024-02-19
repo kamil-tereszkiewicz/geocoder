@@ -6,9 +6,9 @@ require 'sqlite3'
 require_relative './lib/geocoder/us/metaphone.rb'
 require_relative './lib/geocoder/us/constants.rb'
 
-# update street table with more usefull street /street_phone
+# update street table with more usefull street /street_phone columns
 
-REFILL_MY_COLS = false
+REFILL_MY_COLS = false # TODO: accept it as a parameter
 
 if ARGV.empty?
   warn "Missing SQLite file parameter"
@@ -166,6 +166,9 @@ end
 def main
   # db_path = "/data/geocoder-gb-1-2023-07-13-1/geocoder_kt.db"
   db_path = ARGV[0]
+
+  puts "db path: #{db_path}"
+
   @db = SQLite3::Database.new(db_path)
   @db.create_function("clear_my_street", 1) do |func, col_value|
     func.result = remove_noise_words col_value

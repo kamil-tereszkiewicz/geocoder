@@ -60,4 +60,4 @@ COPY entrypoint.R .
 WORKDIR /tmp
 
 ENTRYPOINT ["/app/entrypoint.R"]
-# ENTRYPOINT ["ruby", "/app/update_t.rb"]
+#ENTRYPOINT ["ruby", "/app/update_t.rb", "/path_to/the_db/file.db"]
