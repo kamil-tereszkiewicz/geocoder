@@ -1,11 +1,12 @@
-require 'rubygems'
+# frozen_string_literal: true
 
+require 'rubygems'
 require 'sqlite3'
-# require 'text'
+
 require_relative './lib/geocoder/us/metaphone.rb'
 require_relative './lib/geocoder/us/constants.rb'
 
-# update street table with more usefull street_phone
+# update street table with more usefull street /street_phone
 
 REFILL_MY_COLS = false
 
@@ -17,20 +18,19 @@ if ARGV.empty?
 end
 
 def measure(fn, *args) 
-  startTime = Time.now
+  start_time = Time.now
   starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
   method(fn).call(*args)
   ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-  endTime = Time.now
+  end_time = Time.now
   elapsed = ending - starting
 
-  puts "\n#{fn}: elspsed: #{elapsed} s,\n\tstart: #{startTime}\n\tend: #{endTime}"
+  puts "\n#{fn}: elspsed: #{elapsed} s,\n\tstart: #{start_time}\n\tend: #{end_time}\n"
 end
 
 def load_extension(db)
   helper = "./lib/geocoder/us/sqlite3.so"
       if File.expand_path(helper) != helper
-        # helper = File.join(File.dirname(__FILE__), helper)
         helper = File.expand_path(helper)
       end
         db.enable_load_extension(1)
@@ -38,31 +38,31 @@ def load_extension(db)
         db.enable_load_extension(0)
 end
 
-def add_col(db, colName, addColSql)
-  puts "creating column: #{colName}..."
+def add_col(db, col_name, add_col_sql)
+  puts "creating column: #{col_name}..."
       begin
-        results = db.execute addColSql
+        results = db.execute add_col_sql
         puts results.inspect
-        puts "created column: #{colName}"
+        puts "created column: #{col_name}"
       rescue SQLite3::SQLException => ex
         raise ex if not ex.message.include? "duplicate column name"
 
-              puts "column: #{colName} already exists"
+              puts "column: #{col_name} already exists"
       end
 end
 
 def add_my_columns(db)
-  colName = "clear_street"
-  sql = "ALTER TABLE feature ADD COLUMN #{colName} VARCHAR(100);"
-  add_col db, colName,sql 
+  col_name = "clear_street"
+  sql = "ALTER TABLE feature ADD COLUMN #{col_name} VARCHAR(100);"
+  add_col db, col_name,sql 
 
-  colName = "clear_street_phone"
-  sql = "ALTER TABLE feature ADD COLUMN #{colName} VARCHAR(5);"
-  add_col db, colName, sql 
+  col_name = "clear_street_phone"
+  sql = "ALTER TABLE feature ADD COLUMN #{col_name} VARCHAR(5);"
+  add_col db, col_name, sql 
 
-  colName = "norm_street"
-  sql = "ALTER TABLE feature ADD COLUMN #{colName} VARCHAR(100);"
-  add_col db, colName,sql 
+  col_name = "norm_street"
+  sql = "ALTER TABLE feature ADD COLUMN #{col_name} VARCHAR(100);"
+  add_col db, col_name,sql 
 end
 
 def fill_my_col(db, col_name,sql)
@@ -84,126 +84,103 @@ end
 
 def drop_my_indexes(db)
   sql = "DROP INDEX IF EXISTS "
-  indexName = "feature_clear_street_phone_zip_idx"
+  index_name = "feature_clear_street_phone_zip_idx"
 
-  puts "dropping index: #{indexName}..."
-  results = db.execute "#{sql} #{indexName};"
-  puts "dropped index: #{indexName}"
+  puts "dropping index: #{index_name}..."
+  db.execute "#{sql} #{index_name};"
+  puts "dropped index: #{index_name}"
 
-  # indexName = "feature_norm_street_zip_idx"
-  #     puts "dropping index: #{indexName}..."
-  #     results = db.execute "#{sql} #{indexName};"
-  #     puts "dropped index: #{indexName}"
+  # index_name = "feature_norm_street_zip_idx"
+  #     puts "dropping index: #{index_name}..."
+  #     results = db.execute "#{sql} #{index_name};"
+  #     puts "dropped index: #{index_name}"
 end
 
 def add_my_indexes(db)
   # TODO: verify is all indexes were duplicated for new columns
 
-  indexName = "feature_clear_street_phone_zip_idx"
-      sql = "CREATE INDEX if not exists #{indexName} ON feature (clear_street_phone, zip);"
-      puts "adding index: #{indexName}..."
-      results = db.execute sql
-      puts "created index: #{indexName}"
+  index_name = "feature_clear_street_phone_zip_idx"
+  sql = "CREATE INDEX if not exists #{index_name} ON feature (clear_street_phone, zip);"
+  puts "adding index: #{index_name}..."
+  db.execute sql
+  puts "created index: #{index_name}"
 
-  # indexName = "feature_norm_street_zip_idx"
-  #     sql = "CREATE INDEX if not exists #{indexName} ON feature (norm_street, zip);"
-  #     puts "adding index: #{indexName}..."
+  # index_name = "feature_norm_street_zip_idx"
+  #     sql = "CREATE INDEX if not exists #{index_name} ON feature (norm_street, zip);"
+  #     puts "adding index: #{index_name}..."
   #     results = db.execute sql
-  #     puts "created index: #{indexName}"
+  #     puts "created index: #{index_name}"
 end
 
-    def normalize_street(string)
+def normalize_street(string)
+  string.force_encoding('utf-8')
+  tokens = string.split(' ')
 
-      string.force_encoding('utf-8')
-      tokens = string.split(' ')
-
-      # warn "normalize base hash: #{Geocoder::US::Directional.base_hash}"
-      tokens.map! do |token|
-        token = Geocoder::US::Directional.base_hash[token] if Geocoder::US::Directional.base_hash.key?(token)
-        token = Geocoder::US::Prefix_Qualifier.base_hash[token] if Geocoder::US::Prefix_Qualifier.base_hash.key?(token)
-        token = Geocoder::US::Suffix_Qualifier.base_hash[token] if Geocoder::US::Suffix_Qualifier.base_hash.key?(token)
-        token = Geocoder::US::Prefix_Canonical[token] if Geocoder::US::Prefix_Canonical.key?(token)
-        token = Geocoder::US::Prefix_Alternate[token] if Geocoder::US::Prefix_Alternate.key?(token)
-        token = Geocoder::US::Suffix_Canonical[token] if Geocoder::US::Suffix_Canonical.key?(token)
-        token = Geocoder::US::Suffix_Alternate[token] if Geocoder::US::Suffix_Alternate.key?(token)
-        token = Geocoder::US::Unit_Type.base_hash[token] if Geocoder::US::Unit_Type.base_hash.key?(token)
-        
-        token.downcase
-      end
-
-      tokens.join ' '
-    end
-
-    def remove_noise_words(string)
-      # puts "\nstring: #{string}"
-      prefix = Regexp.new("^" + Geocoder::US::Prefix_Type.regexp.source + "\s*", 
-                          Regexp::IGNORECASE)
-      suffix = Regexp.new("\s*" + Geocoder::US::Suffix_Type.regexp.source + "$", 
-                          Regexp::IGNORECASE)
-      predxn = Regexp.new("^" + Geocoder::US::Directional.regexp.source + "\s*", 
-                          Regexp::IGNORECASE)
-      sufdxn = Regexp.new("\s*" + Geocoder::US::Directional.regexp.source + "$", 
-                          Regexp::IGNORECASE)
-      good_string = string.downcase
-      # puts "1 #{good_string}"
-
-      # puts "-> #{string} -> #{good_string}"
-      # puts " encoding: #{string.encoding} encoding: #{good_string.encoding}"
-      good_string.force_encoding('utf-8')
-      # puts " encoding: #{good_string.encoding} -> #{good_string}"
-
-      good_string.gsub!(predxn, "")
-      # puts "2 #{good_string}"
-      good_string.gsub!(sufdxn, "")
-      # puts "3 #{good_string}"
-      good_string.gsub!(prefix, "")
-      # puts "4 #{good_string}"
-      good_string.gsub!(suffix, "")
-      # puts "5 #{good_string}"
-
-      good_string.strip!
-
-      # puts "6 #{good_string}"
-      return string if good_string.empty?
-
-      good_strings = good_string.split
-      # puts "7 #{good_strings}"
-
-      good_strings.reject! {|s| s.empty?}
-      # puts "8 #{good_strings}"
-      # good_strings.reject! {|s| Geocoder::US::Std_Abbr.key?(s) or Geocoder::US::Name_Abbr.key?(s)}
-      # puts "9 #{good_strings}"
-      return good_string if good_strings.empty?
-
-      good_strings.join " "
-      # puts "10 #{good_string}"
-      
-      
-    end
-
-    # dbPath = "/data/geocoder-gb-1-2023-07-13-1/geocoder_kt.db"
-    dbPath = ARGV[0]
-    @db = SQLite3::Database.new(dbPath)
-    # @db = SQLite3::Database.new(ARGV[0])
-    @db.create_function("clear_my_street", 1) do |func, colValue|
-      func.result = remove_noise_words colValue
-    end
-    @db.create_function("normalize_my_street", 1) do |func, colValue|
-      func.result = normalize_street colValue
-    end
-
-    load_extension @db
-    puts method(:add_my_columns)
-    measure :drop_my_indexes, @db
-    measure :add_my_columns, @db
-    measure :fill_my_columns, @db
-    measure :add_my_indexes, @db
-
-    #     sql = "select street, street_phone, clear_street(street) cstreet, metaphone_street(clear_street(street),5) mstreet, metaphone(clear_street(street),5) mstreetC from feature where zip like '98335' order by street"
+  tokens.map! do |token|
+    token = Geocoder::US::Directional.base_hash[token] if Geocoder::US::Directional.base_hash.key?(token)
+    token = Geocoder::US::Prefix_Qualifier.base_hash[token] if Geocoder::US::Prefix_Qualifier.base_hash.key?(token)
+    token = Geocoder::US::Suffix_Qualifier.base_hash[token] if Geocoder::US::Suffix_Qualifier.base_hash.key?(token)
+    token = Geocoder::US::Prefix_Canonical[token] if Geocoder::US::Prefix_Canonical.key?(token)
+    token = Geocoder::US::Prefix_Alternate[token] if Geocoder::US::Prefix_Alternate.key?(token)
+    token = Geocoder::US::Suffix_Canonical[token] if Geocoder::US::Suffix_Canonical.key?(token)
+    token = Geocoder::US::Suffix_Alternate[token] if Geocoder::US::Suffix_Alternate.key?(token)
+    token = Geocoder::US::Unit_Type.base_hash[token] if Geocoder::US::Unit_Type.base_hash.key?(token)
     
-    #  results=  @db.execute sql
-    #  # puts "results: #{results.inspect}"
-    # results.each{|x|
-    # puts x.inspect
-    # }
-    @db.close
+    token.downcase
+  end
+
+  tokens.join ' '
+end
+
+def remove_noise_words(string)
+  prefix = Regexp.new("^" + Geocoder::US::Prefix_Type.regexp.source + "\s*", 
+                      Regexp::IGNORECASE)
+  suffix = Regexp.new("\s*" + Geocoder::US::Suffix_Type.regexp.source + "$", 
+                      Regexp::IGNORECASE)
+  predxn = Regexp.new("^" + Geocoder::US::Directional.regexp.source + "\s*", 
+                      Regexp::IGNORECASE)
+  sufdxn = Regexp.new("\s*" + Geocoder::US::Directional.regexp.source + "$", 
+                      Regexp::IGNORECASE)
+  good_string = string.downcase
+
+  good_string.force_encoding('utf-8')
+
+  good_string.gsub!(predxn, "")
+  good_string.gsub!(sufdxn, "")
+  good_string.gsub!(prefix, "")
+  good_string.gsub!(suffix, "")
+
+  good_string.strip!
+
+  return string if good_string.empty?
+
+  good_strings = good_string.split
+  good_strings.reject! {|s| s.empty?}
+  # good_strings.reject! {|s| Geocoder::US::Std_Abbr.key?(s) or Geocoder::US::Name_Abbr.key?(s)}
+  return good_string if good_strings.empty?
+
+  good_strings.join " "
+end
+
+def main
+  # db_path = "/data/geocoder-gb-1-2023-07-13-1/geocoder_kt.db"
+  db_path = ARGV[0]
+  @db = SQLite3::Database.new(db_path)
+  @db.create_function("clear_my_street", 1) do |func, col_value|
+    func.result = remove_noise_words col_value
+  end
+  @db.create_function("normalize_my_street", 1) do |func, col_value|
+    func.result = normalize_street col_value
+  end
+
+  load_extension @db
+
+  measure :drop_my_indexes, @db
+  measure :add_my_columns, @db
+  measure :fill_my_columns, @db
+  measure :add_my_indexes, @db
+
+  @db.close
+end
+
+measure :main
