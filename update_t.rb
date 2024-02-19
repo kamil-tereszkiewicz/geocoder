@@ -30,12 +30,13 @@ end
 
 def load_extension(db)
   helper = "./lib/geocoder/us/sqlite3.so"
-      if File.expand_path(helper) != helper
-        helper = File.expand_path(helper)
-      end
-        db.enable_load_extension(1)
-        db.load_extension(helper)
-        db.enable_load_extension(0)
+  if File.expand_path(helper) != helper
+    # helper = File.expand_path(helper) # doesn't work inside our container 
+    helper = File.join(File.dirname(__FILE__), helper)
+  end
+    db.enable_load_extension(1)
+    db.load_extension(helper)
+    db.enable_load_extension(0)
 end
 
 def add_col(db, col_name, add_col_sql)
