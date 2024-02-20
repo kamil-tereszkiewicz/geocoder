@@ -19,5 +19,8 @@ echo "old files cleared, generating..."
 # find . -type f -name "*.csv" -exec chmod 777 {} \;
 # find . -type f -name "*.log" -exec chmod 777 {} \;
 
-Rscript ./entrypoint.R "${folder}$1" all
+Rscript ./entrypoint.R "${folder}$1" all --debug
+# Rscript ./entrypoint.R "${folder}$1" --debug
+# Rscript ./entrypoint.R "${folder}$1"
+# Rscript ./entrypoint.R "${folder}$1" all
 echo "done: $(date)"

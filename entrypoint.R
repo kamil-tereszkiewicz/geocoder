@@ -8,9 +8,17 @@ withr::with_message_sink("/dev/null", library(knitr))
 
 doc <- "
       Usage:
-      entrypoint.R <filename> [<score_threshold>]
+      entrypoint.R <filename> [<score_threshold>] [--debug]
+
+      Options:
+        --debug
       "
 opt <- docopt::docopt(doc)
+
+# if (opt$debug) {
+#  print(opt)
+# }
+
 if (is.null(opt$score_threshold)) opt$score_threshold <- 0.5
 
 d <- readr::read_csv(opt$filename, show_col_types = FALSE)
@@ -40,40 +48,27 @@ out_template <- tibble(
   fips_county = NA, number = NA, prenum = NA
 )
 
-stderrCnt <<- -1
-incCnt <- function() {
-  # t <- sprintf("incrementing from: %d", stderrCnt)
-  stderrCnt <<- stderrCnt + 1
-  
-  # t <- sprintf("%s to: %d",t , stderrCnt)
-  # print(t)
-
-  stderrCnt 
-}
-
-incCnt()
-# print(incCnt())
+stderrCnt <<- 0 # used to correlate stderr output with corresponding line in passed .csv
 
 ## geocode
 cli::cli_alert_info("now geocoding ...", wrap = TRUE)
 geocode <- function(addr_string) {
   stopifnot(class(addr_string) == "character")
 
-  l_stderrCnt <- incCnt() 
-  # print(l_stderrCnt)
-  # stderrFn <- sprintf("./delme/geoLog%d.log", l_stderrCnt)
-  stderrFn <- sprintf("geoLog%d.log", l_stderrCnt)
-  # cli::cli_alert_info(sprintf("%d. sterr fn: %s",l_stderrCnt, stderrFn), wrap = TRUE)
+  stderrFn <- FALSE
 
-  print(addr_string)
-
+  if (opt$debug) {
+    stderrCnt <<- stderrCnt + 1
+    stderrFn <- sprintf("%s/geoLog%d.log", dirname(opt$filename), stderrCnt)
+    print(addr_string)
+  }
 
   out <- system2("ruby",
     # args = c("/app/geocode.rb", shQuote(addr_string)),
-    args = c("./geocode.rb", shQuote(addr_string)),
+    args = c(if (opt$debug) "./geocode.rb" else "/app/geocode.rb", shQuote(addr_string)),
+    # args = c(if (opt$debug) "./geocode.rb" else "./geocode.rb", shQuote(addr_string)),
     # stderr = FALSE,
     stderr = stderrFn,
-    # stderr = TRUE,
     stdout = TRUE
   )
 
