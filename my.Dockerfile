@@ -1,6 +1,12 @@
 FROM localhost/myfromgeo
 
-RUN if [[ -z "$geo_db" ]] ; then echo "Argument geo_db is empty, use --build-arg geo_db=\"../geocoder.db\"" ; exit 1 ; fi
+ARG geo_db
+
+RUN if [  -z $geo_db ];then \
+  >&2 echo  "\n****************Warning!*************\n";\
+  >&2 echo "Argument geo_db is empty, use --build-arg geo_db=../geocoder.db\n" ;\
+  >&2 exit 1;\
+  fi
 
 ENV GEOCODER_DB=$geo_db
 

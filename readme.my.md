@@ -21,7 +21,7 @@ The `./.Dockerfile` was split into two files: `./from.Dockerfile` and `./my.Dock
 
 This command build image and removes *dangling* (useless) images.
 
-`podman build --build-arg geo_db="./geocoder.db" -t mygeo -f ./my.Dockerfile && podman rmi -f  $(podman  images -f "dangling=true" -q)`
+`podman build --build-arg geo_db="../geocoder.db" -t mygeo -f ./my.Dockerfile && podman rmi -f  $(podman  images -f "dangling=true" -q)`
 
 ## Geocode addresses from csv file: 
 
