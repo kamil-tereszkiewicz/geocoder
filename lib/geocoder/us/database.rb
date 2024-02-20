@@ -4,9 +4,9 @@ require 'sqlite3'
 # require 'levenshtein'
 
 require 'set'
-require 'pp'
+# require 'pp'
 require 'time'
-require 'thread'
+# require 'thread'
 
 require_relative './address'
 require_relative './metaphone'
