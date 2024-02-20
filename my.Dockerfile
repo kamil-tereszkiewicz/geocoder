@@ -1,5 +1,9 @@
 FROM localhost/myfromgeo
 
+RUN if [[ -z "$geo_db" ]] ; then echo "Argument geo_db is empty, use --build-arg geo_db=\"../geocoder.db\"" ; exit 1 ; fi
+
+ENV GEOCODER_DB=$geo_db
+
 # DeGAUSS container metadata
 ENV degauss_name="geocoder"
 ENV degauss_version="3.3.0"

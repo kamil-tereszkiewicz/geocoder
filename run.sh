@@ -2,6 +2,8 @@
 
 echo "start: $(date)"
 
+export GEOCODER_DB="../geocoder.db"
+
 folder="./delme/"
 
 # example: ./run.sh aa.csv

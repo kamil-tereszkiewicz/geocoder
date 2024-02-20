@@ -2,10 +2,8 @@ require 'rubygems'
 require_relative './lib/geocoder/us'
 require 'json'
 
-# dbPath = "/data/geocoder-gb-1-2023-07-13-1/geocoder_kt.db"
-# dbPath = "../geocoder.db"
-#db_path = '/mnt/c/geocoder.db'
-db_path = '../geocoder.db'
+db_path = ENV["GEOCODER_DB"]
+# warn "db: #{db_path}"
 db = Geocoder::US::Database.new(db_path)
 
 addr = ARGV[0]
