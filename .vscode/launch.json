@@ -10,8 +10,13 @@
       "request": "launch",
       // "program": "ruby ${workspaceFolder}/geocode.rb \"11961 1ST AV SYCAMORE TOWNSHIP OH 45249\""
       // "program": "ruby ${workspaceFolder}/geocode.rb \"4545 POINT FOSDICK DR GIG HARBOR WASHINGTON 98335\""
-      "program": "ruby ${workspaceFolder}/geocode.rb \"4545 POINT FOSDICK DR GIG HARBOR WA 98335\"",
-      // "program": "ruby ${workspaceFolder}/geocode.rb \"316 Martin Luther King Jr Way Tacoma 98405\""
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"4545 PT FOSDICK DR GIG HARBOR WA 98335\"",
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"4545 POINT FOSDICK DR GIG HARBOR WA 98335\"",
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"316 Martin Luther King Jr Way Tacoma 98405\"",
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"146 Baxter St New York NY 10013\"",
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"1600 Pennsylvania 20050\"",
+      "program": "ruby ${workspaceFolder}/geocode.rb \"1600 Pennsylvania Pennsylvania 20050\"",
+      // "program": "ruby ${workspaceFolder}/geocode.rb \"1600 Pennsylvania PA 20050\"",
       "env": {
         "GEOCODER_DB": "../geocoder.db"
       }

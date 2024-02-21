@@ -33,7 +33,7 @@ module Geocoder::US
         @text = ""
         assign_text_to_address text
       else
-        @text = clean text
+        @text = clean text # TODO: check if clean does the same as ./entrypoint.R
         parse
       end
     end
@@ -147,7 +147,7 @@ module Geocoder::US
       # /////////><
       @full_state = @state[0].strip # special case: New York
       # /////////><
-      @state = State[@full_state]
+      @state = State[@full_state] # this returns two letter abbr of a state in either case, when passed full name or abbr
       text
     end
     
@@ -194,7 +194,7 @@ module Geocoder::US
       @street = text.scan(Match[:street])
       @street = expand_streets(@street)
       # SPECIAL CASE: 1600 Pennsylvania 20050
-      @street << @full_state if @street.empty? and @state.downcase != @full_state.downcase      
+      @street << @full_state if @street.empty? and @state.downcase != @full_state.downcase # i guess there is no point to push abbr of a state as street
  
       @city = text.scan(Match[:city])
       if !@city.empty?
@@ -209,10 +209,10 @@ module Geocoder::US
 
       # SPECIAL CASE: no city, but a state with the same name. e.g. "New York"
       # TODO: kt: we are adding state here - unnecessady in some cases, it looks like it happen when we pass full state in the address?
-      @city << @full_state if @state.downcase != @full_state.downcase 
+      @city << @full_state if @state.downcase != @full_state.downcase # TODO: why don't we puts only if the city is empty????
     end
     
-    def expand_streets(street) # this is also used to expand cities after placec_by_zip
+    def expand_streets(street) # this is also used to expand cities after places_by_zip
       if !street.empty? && !street[0].nil?
         street.map! {|s|s.strip}
         add = street.map {|item| item.gsub(Name_Abbr.regexp) {|m| Name_Abbr[m].downcase}}

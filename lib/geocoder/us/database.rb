@@ -168,7 +168,7 @@ module Geocoder::US
    
     def places_by_zip (city, zip)
       execute("SELECT *, levenshtein(?, city) AS city_score, ? as tested_city
-               FROM place WHERE zip = ? order by priority desc;", city,city, zip)
+               FROM place WHERE zip = ? order by priority desc;", city, city, zip)
     end
 
     # Query the place table for by city, optional state, and zip.
@@ -211,10 +211,15 @@ module Geocoder::US
       _print_metaphones "street", tokens
 
       sql = "
-        SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street
+        SELECT feature.*, levenshtein(?, street) AS street_score, 
+        levenshtein(?, street) AS street_score_base, 
+        levenshtein(?, norm_street) AS street_score_norm,
+        street_phone base_street_phone,
+        street base_street,
+        ? tested_street
           FROM feature
           WHERE street_phone IN (#{metaphones})"
-      params = [street, street] + tokens
+      params = [street, street, street, street] + tokens
       return [sql, params]
     end
 
@@ -225,26 +230,31 @@ module Geocoder::US
       _print_metaphones "street", tokens
 
       sql = "
-        SELECT feature.*, levenshtein(?, norm_street) AS street_score, ? tested_street, 1 via_n_c_street
+        SELECT feature.*, levenshtein(?, norm_street) AS street_score, 
+        levenshtein(?, street) AS street_score_base, 
+        levenshtein(?, norm_street) AS street_score_norm,
+        street_phone base_street_phone,
+        street base_street,
+        ? tested_street, 1 via_n_c_street
           FROM feature
-          WHERE clear_street_phone IN (#{metaphones})" # TODO: use clear_street_phone
-      params = [street, street] + tokens
+          WHERE clear_street_phone IN (#{metaphones})"
+      params = [street, street, street, street] + tokens
       return [sql, params]
     end
 
     # copy of the feature_by_street but using clear_street_phone
-    def features_by_clear_street (street, tokens)
-      metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
+    # def features_by_clear_street (street, tokens)
+    #  metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
 
-      _print_metaphones "street", tokens
+    #   _print_metaphones "street", tokens
 
-      sql = "
-        SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street, 1 via_c_street
-          FROM feature
-          WHERE clear_street_phone IN (#{metaphones})"
-      params = [street, street] + tokens
-      return [sql, params]
-    end
+    #   sql = "
+    #     SELECT feature.*, levenshtein(?, street) AS street_score, ? tested_street, 1 via_c_street
+    #       FROM feature
+    #       WHERE clear_street_phone IN (#{metaphones})"
+    #   params = [street, street] + tokens
+    #   return [sql, params]
+    # end
 
     # Query the feature and range tables for a set of ranges, given a
     # building number, street name, and list of candidate ZIP codes.
@@ -276,17 +286,17 @@ module Geocoder::US
     end
     
     # copy of the features_by_street_and_zip but using clear_street_phone
-    def features_by_clear_street_and_zip (street, tokens, zips)
+    # def features_by_clear_street_and_zip (street, tokens, zips)
 
-      warn "__ features_by_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
+    #   warn "__ features_by_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
-      sql, params = features_by_clear_street(street, tokens)
-      in_list = placeholders_for zips
-      sql    += " AND feature.zip IN (#{in_list})"
-      params += zips
+    #   sql, params = features_by_clear_street(street, tokens)
+    #   in_list = placeholders_for zips
+    #   sql    += " AND feature.zip IN (#{in_list})"
+    #   params += zips
 
-      execute sql, *params
-    end
+    #   execute sql, *params
+    # end
 
     # Query the feature and range tables for a set of ranges, given a
     # building number, street name, and list of candidate ZIP codes.
@@ -486,19 +496,28 @@ module Geocoder::US
 
       ##############################################################################################################
       if candidates.empty?
+        # TODO: could we use 'OR' on methaphone with street_phone and clear_street_phone in one of the queries?
+        # TODO: it is better to use clear_street_phone, or would it be better to use norm_street for this?
         tokens = address.street_parts
         warn "__ find_candidates: 2.1.1 using norm/clear street: #{tokens.inspect}"
+        # the norm_street supposed to improve scorring i.e. some values in the street column 
+        # contains full words like "Point" where others use abbreviations like "PT", 
+        # the norm_street unify this always using abbrevations (street extracted from the passed
+        # address will most likely contain abbrevations)
         candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips
         _print_candidates candidates
       end
 
       ############################################################################################################## 2
-      if candidates.empty?
-        tokens = address.street_parts
-        warn "__ find_candidates: 2.1.2 using clear street: #{tokens.inspect}"
-        candidates = features_by_clear_street_and_zip street, tokens, zips
-        _print_candidates candidates
-      end
+      # if candidates.empty? 
+      # TODO: we may want to remove this, the where is the same as in the previous (fetures_by_norm_and_clear_street_and_zip) query,
+      # so either we don't enter this block if previous query returns any results or we also get empty results here. 
+      # What we could do is add second score and have two street scores one with street and one with norm_street.
+      # tokens = address.street_parts
+      # warn "__ find_candidates: 2.1.2 using clear street: #{tokens.inspect}"
+      # candidates = features_by_clear_street_and_zip street, tokens, zips
+      # _print_candidates candidates
+      # end
       ##############################################################################################################
 
       if candidates.empty?
