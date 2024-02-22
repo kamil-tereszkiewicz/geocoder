@@ -1,4 +1,5 @@
-FROM rocker/r-ver:4.1.2
+FROM rocker/r-ver:4.3.2
+# FROM rocker/r-ver:4.1.2
 
 # DeGAUSS container metadata
 ENV degauss_name="geocoder"
@@ -15,6 +16,8 @@ LABEL "org.degauss.argument"="${degauss_argument}"
 #ADD https://geomarker.s3.amazonaws.com/geocoder_2021.db /opt/geocoder.db
 # COPY geocoder.db /opt/geocoder.db
 
+# TODO: ruby version: 
+# rocket/r-ver:4.x is based on ubuntu 20, and ruby-full will install ruby version 2.7.
 RUN apt-get update && apt-get install -y \
     libssl-dev \
     libssh2-1-dev \
