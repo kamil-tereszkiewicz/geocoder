@@ -12,32 +12,42 @@ The `./.Dockerfile` was split into two files: `./from.Dockerfile` and `./my.Dock
 
 ### build `./from.Dockerfile`
 
-`podman build -t myfromgeo -f ./from.Dockerfile`
+```bash
+podman build -t myfromgeo -f ./from.Dockerfile
+```
 
 <!-- `podman build -t mygeo -f ./my.Dockerfile`
 `podman rmi -f  $(podman  images -f "dangling=true" -q)` -->
 
 ### build `./my.Dockerfile`
 
-This command build image and removes *dangling* (useless) images.
+This command build image and removes _dangling_ (useless) images.
 
-`podman build --build-arg geo_db="../geocoder.db" -t mygeo -f ./my.Dockerfile && podman rmi -f  $(podman  images -f "dangling=true" -q)`
+```bash
+podman build --build-arg geo_db="../geocoder.db" -t mygeo -f ./my.Dockerfile && podman rmi -f  $(podman  images -f "dangling=true" -q)
+```
 
-## Geocode addresses from csv file: 
+## Geocode addresses from csv file:
 
 ### optionally clear old output files
- 
-`rm -rf geo* *_geocoder*_score_threshold* stderr*`
+
+```bash
+rm -rf geo* *_geocoder*_score_threshold* stderr*
+```
 
 ### run geocoder from the created image
 
-`podman run --rm -v $PWD:/tmp -v /data/:/data:z mygeo:latest a.csv all`
+```bash
+podman run --rm -v $PWD:/tmp -v /data/:/data:z mygeo:latest a.csv all
+```
 
 <!-- Add -a after run to attach to the container. Optionally specify stdout/stderr/stdin. -->
 
 Add `-it` to attach and allocate pseudo -TTY (this will allow to see output and interact with container)
 
-`podman run -it --rm -v $PWD:/tmp -v /data/:/data:z mygeo:latest a.csv all`
+```bash
+podman run -it --rm -v $PWD:/tmp -v /data/:/data:z mygeo:latest a.csv all
+```
 
 ## Update db: `update_t.rb`
 
@@ -48,7 +58,7 @@ Add `-it` to attach and allocate pseudo -TTY (this will allow to see output and 
 ENTRYPOINT ["ruby", "/app/update_t.rb", "/path_to/the_db/file.db"]
 ```
 
- - if you need to re-run the process on a db that already has new tables, then modify: `./update_t.rb`:
+- if you need to re-run the process on a db that already has new tables, then modify: `./update_t.rb`:
 
 ```ruby
 # REFILL_MY_COLS = false
@@ -65,4 +75,13 @@ REFILL_MY_COLS = true # or !false
 
 Following is useful only when we would like modify or run something without switching to root.
 
-`find . -type f -name "*" -exec chmod 777 {} \;`
+```bash
+find . -type f -name "*" -exec chmod 777 {} \;
+```
+
+Check version of ruby that is running inside container, or run any other executable with args (place the arguments after image name (last))
+
+```bash
+$ podman run -it --entrypoint ruby --rm mygeo:latest --version
+$ podman run -it --entrypoint ruby --rm mygeo:latest /app/lib/geocoder/us/rest.rb
+```

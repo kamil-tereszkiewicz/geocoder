@@ -1,8 +1,10 @@
 # require 'rubygems'
 require_relative './lib/geocoder/us'
 require 'json'
+require 'pathname'
 
-db_path = ENV["GEOCODER_DB"]
+db_path = ENV["GEOCODER_DB"] 
+db_path = Pathname.new(db_path).cleanpath
 
 warn "db: #{db_path}"
 

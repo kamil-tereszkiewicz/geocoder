@@ -174,3 +174,6 @@ Naming/RescuedExceptionsVariableName:
 
 Style/RedundantFileExtensionInRequire:
   Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
