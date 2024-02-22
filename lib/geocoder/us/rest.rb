@@ -1,14 +1,26 @@
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'sinatra'
-require_relative './database'
 require 'json'
+require 'pathname'
+require_relative './database'
 
-@@db = Geocoder::US::Database.new(ENV["GEOCODER_DB"] || ARGV[0])
+db_path = ENV["GEOCODER_DB"] || ARGV[0]
+db_path = Pathname.new(db_path).cleanpath
+
+warn "db: #{db_path}"
+db = Geocoder::US::Database.new(db_path)
+
+warn "i'm here!"
 
 set :port, 8081
 get '/geocode.?:format?' do
   if params[:q]
-    results = @@db.geocode params[:q].gsub(/\s+(and|at)\s+/i,' ')
+    q = params[:q]
+    q = q.gsub(/\s+(and|at)\s+/i,' ')
+    results = db.geocode q
+    # results = @db.geocode params[:q].gsub(/\s+(and|at)\s+/i,' ')
     @features = []
     results.each do |result|
       coords = [result.delete(:lon), result.delete(:lat)]
