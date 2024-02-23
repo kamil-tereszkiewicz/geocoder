@@ -18,7 +18,7 @@ Metrics/AbcSize:
 
 Layout/LineLength:
   Enabled: true
-  Max: 99
+  Max: 159
   AllowHeredoc: false
 
 Layout/TrailingWhitespace:
