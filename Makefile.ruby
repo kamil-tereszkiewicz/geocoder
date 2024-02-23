@@ -1,6 +1,6 @@
 all:
 	make -C src install
-	gem build gemspec
+	# gem build gemspec # uncomment to use geocoder as package not with relative imports
 
 test: all
 	ruby -Ilib tests/run.rb

@@ -11,16 +11,16 @@ RUN if [  -z $geo_db ];then \
 ENV GEOCODER_DB=$geo_db
 
 # DeGAUSS container metadata
-ENV degauss_name="geocoder"
-ENV degauss_version="3.3.0"
-ENV degauss_description="geocodes"
-ENV degauss_argument="valid_geocode_score_threshold [default: 0.5]"
+# ENV degauss_name="geocoder"
+# ENV degauss_version="3.3.0"
+# ENV degauss_description="geocodes"
+# ENV degauss_argument="valid_geocode_score_threshold [default: 0.5]"
 
 # add OCI labels based on environment variables too
-LABEL "org.degauss.name"="${degauss_name}"
-LABEL "org.degauss.version"="${degauss_version}"
-LABEL "org.degauss.description"="${degauss_description}"
-LABEL "org.degauss.argument"="${degauss_argument}"
+# LABEL "org.degauss.name"="${degauss_name}"
+# LABEL "org.degauss.version"="${degauss_version}"
+# LABEL "org.degauss.description"="${degauss_description}"
+# LABEL "org.degauss.argument"="${degauss_argument}"
 
 #ADD https://geomarker.s3.amazonaws.com/geocoder_2021.db /opt/geocoder.db
 # COPY geocoder.db /opt/geocoder.db
