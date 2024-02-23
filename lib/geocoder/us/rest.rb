@@ -40,6 +40,7 @@ get '/geocode.?:format?' do
     end
     case params[:format]
     when /json/
+      content_type "application/json"
       begin
         {
           :type => "FeatureCollection",
