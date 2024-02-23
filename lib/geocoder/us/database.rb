@@ -167,8 +167,8 @@ module Geocoder::US
     end
    
     def places_by_zip (city, zip)
-      execute("SELECT *, levenshtein(?, city) AS city_score, ? as tested_city
-               FROM place WHERE zip = ? order by priority desc;", city, city, zip)
+      execute("SELECT *, levenshtein(?, city) AS city_score, levenshtein(?, city) AS city_score_,? as tested_city
+               FROM place WHERE zip = ? order by priority desc;", city, city, city, zip)
     end
 
     # Query the place table for by city, optional state, and zip.
@@ -180,16 +180,16 @@ module Geocoder::US
       end
       if state.nil? or state.empty?
         and_state = ""
-        args = [city, city] + tokens.clone
+        args = [city, city, city] + tokens.clone
       else
         and_state = "AND state = ?"
-        args = [city, city] + tokens.clone + [state]
+        args = [city, city, city] + tokens.clone + [state]
       end
       metaphones = metaphone_placeholders_for tokens
 
       _print_metaphones "city", tokens
       
-      execute("SELECT *, levenshtein(?, city) AS city_score, ? as tested_city
+      execute("SELECT *, levenshtein(?, city) AS city_score, levenshtein(?, city) AS city_score_, ? as tested_city
                 FROM place WHERE city_phone IN (#{metaphones}) #{and_state} order by priority desc;", *args)
     end
 
@@ -490,7 +490,7 @@ module Geocoder::US
 
       warn "__ find_candidates: zips base on places: #{zips}"
       street = address.street.sort {|a,b|a.length <=> b.length}[0]
-      candidates = features_by_street_and_zip street, address.street_parts, zips
+      # candidates = features_by_street_and_zip street, address.street_parts, zips
 
       _print_candidates candidates
 
@@ -499,12 +499,22 @@ module Geocoder::US
         # TODO: could we use 'OR' on methaphone with street_phone and clear_street_phone in one of the queries?
         # TODO: it is better to use clear_street_phone, or would it be better to use norm_street for this?
         tokens = address.street_parts
-        warn "__ find_candidates: 2.1.1 using norm/clear street: #{tokens.inspect}"
+        warn "__ find_candidates: using norm/clear street: #{tokens.inspect}"
         # the norm_street supposed to improve scorring i.e. some values in the street column 
         # contains full words like "Point" where others use abbreviations like "PT", 
         # the norm_street unify this always using abbrevations (street extracted from the passed
         # address will most likely contain abbrevations)
         candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips
+        _print_candidates candidates
+      end
+
+      ############################################################################################################## 2
+      # changed order between features_by_street_and_zip and fetures_by_norm_and_clear_street_and_zip
+      if candidates.empty?
+        tokens = address.street_parts
+        warn "__ find_candidates: using base street: #{tokens.inspect}"
+        # candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips
+        candidates = features_by_street_and_zip street, tokens, zips
         _print_candidates candidates
       end
 
@@ -521,7 +531,7 @@ module Geocoder::US
       ##############################################################################################################
 
       if candidates.empty?
-        warn "__ find_candidates: 2.2 more candidates relaxed zip: #{candidates.length}"
+        warn "__ find_candidates: using relaxed zip: #{candidates.length}"
         candidates = more_features_by_street_and_zip street, address.street_parts, zips
         _print_candidates candidates
       end
