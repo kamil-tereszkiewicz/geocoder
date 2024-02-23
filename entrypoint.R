@@ -183,3 +183,6 @@ if (opt$score_threshold != "all") {
   knitr::kable(geocode_summary %>% dplyr::select(geocode_result, `n (%)`))
 }
 
+if (opt$debug) {
+  warnings()
+}
