@@ -1,4 +1,4 @@
-FROM rocker/r-ver:4.1.2
+FROM docker.io/rocker/r-ver:4.1.2
 # FROM rocker/r-ver:4.3.2 - problem with apt update/install probably due to too low version of docker/podman??
 
 # DeGAUSS container metadata
@@ -32,6 +32,33 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     software-properties-common \
     && apt-get clean
+
+
+## start ruby version: to use ruby 3.3.3 or whatever version needed comment ruby-full and use following
+# RUN apt-get update && apt-get install -y \
+#     libssl-dev \
+#     libssh2-1-dev \
+#     libcurl4-openssl-dev \
+#     libxml2-dev \
+#     make \
+#     sqlite3 \
+#     libsqlite3-dev \
+#     flex \
+#     bison \
+#     gnupg \
+#     software-properties-common \
+#     curl libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev && apt-get clean
+
+# ADD https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.0.tar.gz /home/
+# WORKDIR /home/
+# RUN tar -xzf /home/ruby-3.3.0.tar.gz
+# # RUN ls -la
+# WORKDIR /home/ruby-3.3.0
+# RUN ./configure && make && make install
+# WORKDIR /
+
+# RUN ruby --version
+## end for ruby version
 
 RUN gem install sqlite3 json Text
 
