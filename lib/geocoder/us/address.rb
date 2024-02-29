@@ -208,13 +208,77 @@ module Geocoder::US
       end
 
       # SPECIAL CASE: no city, but a state with the same name. e.g. "New York"
-      # TODO: kt: we are adding state here - unnecessady in some cases, it looks like it happen when we pass full state in the address?
+      # TODO: kt: we are adding state here - unnecessary in some cases, it looks like it happen when we pass full state in the address?
       # @city << @full_state if @state.downcase != @full_state.downcase
       @city << @full_state if @city.empty? && @state.downcase != @full_state.downcase # added check city.empty
     end
     
+    ################################ // test new expand_streets
+    def expand_streets_full(streets)
+      add = []
+      streets.each do |street|
+        add |=  expand_street_with_map street, Name_Abbr
+      end
+
+      add.flatten!
+      add.each do |street|
+        add |= expand_street_with_map street, Std_Abbr
+      end
+
+      add.flatten!
+      add.uniq!
+      add
+    end
+    
+    def expand_street_with_map(street, the_map)
+      re = /\s+|,|\n|,|\.|\t/
+      add = []
+      street_words = street.split(re).map(&:strip)
+      street_words.each do |word|
+        the_word = the_map[word]&.downcase
+        if the_word.nil? || the_word == word
+          if add.empty?
+            add << word
+            next
+          end
+          add.map! do |s|
+            s + " #{word}"
+          end
+          next
+        end
+
+        if add.empty?
+          add << the_word
+          add << word
+          next
+        end
+
+        add_tmp = []
+
+        add.map! do |s|
+          add_tmp << "#{s} #{word}"
+          s + " #{the_word}"
+        end
+        add |= add_tmp
+      end
+
+      add.map!(&:downcase)
+      add
+    end
+
+    def includes_all(this_array, must_have_elements)
+      must_have_elements.all? { |v| this_array.include? v }
+    end
+    ################################
+
+
     def expand_streets(street) # this is also used to expand cities after places_by_zip
       if !street.empty? && !street[0].nil?
+        ###### // test new_expand
+        tmp_streets = street.map(&:clone)
+        tmp_streets = expand_streets_full tmp_streets
+        ###### // test new_expand
+
         street.map! {|s|s.strip}
         add = street.map {|item| item.gsub(Name_Abbr.regexp) {|m| Name_Abbr[m].downcase}}
         street |= add
@@ -239,6 +303,18 @@ module Geocoder::US
       else
         street = []
       end
+
+      # validation of new expand
+      ok = includes_all tmp_streets, street
+      warn "street: #{street.inspect}"
+      warn "tmp_streets: #{tmp_streets.inspect}"
+      if ok 
+        warn "the streets are at least as good"
+      else 
+        warn "🌋 --- the streets are missing some entries" # TODO: WE are missing expanding numbers!!!!
+      end 
+      # end validation of new expand
+
       street
     end
 
