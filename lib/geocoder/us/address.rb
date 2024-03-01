@@ -225,13 +225,15 @@ module Geocoder::US
         add |= expand_street_with_map street, Std_Abbr
       end
 
+      add.map! {|item| expand_numbers(item)}
+
       add.flatten!
       add.uniq!
       add
     end
     
     def expand_street_with_map(street, the_map)
-      re = /\s+|,|\n|,|\.|\t/
+      re = /\s+|,|\n|,|\.|\t/ # TODO: make sure that this will cover all scenarios that old behaviour would.
       add = []
       street_words = street.split(re).map(&:strip)
       street_words.each do |word|
@@ -311,11 +313,11 @@ module Geocoder::US
       if ok 
         warn "the streets are at least as good"
       else 
-        warn "🌋 --- the streets are missing some entries" # TODO: WE are missing expanding numbers!!!!
+        warn "🌋 --- the streets are missing some entries\nstreets: #{street.inspect}"
       end 
       # end validation of new expand
 
-      street
+      street #TODO: return tmp_streets
     end
 
     def street_parts
