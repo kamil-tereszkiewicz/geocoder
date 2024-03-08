@@ -474,7 +474,7 @@ module Geocoder::US
          places = places_by_zip city, address.zip 
       end
 
-      warn "__ find_candidates: places_by_city: city: #{city.inspect} | #{address.city_parts.inspect} | #{address.state.inspect}"
+      # warn "__ find_candidates: places_by_city: city: #{city.inspect} | #{address.city_parts.inspect} | #{address.state.inspect}"
       places = places_by_city city, address.city_parts, address.state if places.empty?
       # $stderr.puts "__ find_candidates: 1 places: #{places}"
       warn "__ find_candidates: 1 places: #{places.length}"
@@ -492,7 +492,7 @@ module Geocoder::US
       street = address.street.sort {|a,b|a.length <=> b.length}[0]
       # candidates = features_by_street_and_zip street, address.street_parts, zips
 
-      _print_candidates candidates
+      # _print_candidates candidates
 
       ##############################################################################################################
       if candidates.empty?

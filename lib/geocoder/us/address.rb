@@ -33,7 +33,10 @@ module Geocoder::US
         @text = ""
         assign_text_to_address text
       else
-        @text = clean text # TODO: check if clean does the same as ./entrypoint.R
+        # TODO: check if clean does the same as ./entrypoint.R 
+        #   - when passing address through entrypoint.R all non-alfanumerical characters are removed before ruby is called
+        #     which in case of commas causes different assignent to the street and city.
+        @text = clean text 
         parse
       end
     end
@@ -136,17 +139,7 @@ module Geocoder::US
       idx = text.rindex(regex_match)
       text[idx...idx+regex_match.length] = ""
       text.sub! /\s*,?\s*$/o, ""
-
-      # /////////><
-      # tmp_full_state = State_Abbr_Full[@state[0].strip.downcase]
-      # if tmp_full_state.nil? || tmp_full_state.empty?
-      #   @full_state = @state[0].strip
-      # else 
-      #   @full_state = tmp_full_state
-      # end
-      # /////////><
       @full_state = @state[0].strip # special case: New York
-      # /////////><
       @state = State[@full_state] # this returns two letter abbr of a state in either case, when passed full name or abbr
       text
     end
@@ -278,7 +271,9 @@ module Geocoder::US
       if !street.empty? && !street[0].nil?
         ###### // test new_expand
         tmp_streets = street.map(&:clone)
-        tmp_streets = expand_streets_full tmp_streets
+        # TODO: the the Name_Abbr has some words in combinations with other, so e.g. "county" on ints own won't be found, and replace with its abbreviation, 
+        # example address: 220 County Highway H Elkhorn WI 53121
+        tmp_streets = expand_streets_full tmp_streets 
         ###### // test new_expand
 
         street.map! {|s|s.strip}
