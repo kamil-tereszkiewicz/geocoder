@@ -6,18 +6,23 @@ withr::with_message_sink("/dev/null", library(dplyr))
 withr::with_message_sink("/dev/null", library(digest))
 withr::with_message_sink("/dev/null", library(knitr))
 
+
+
 doc <- "
       Usage:
-      entrypoint.R <filename> [<score_threshold>] [--debug]
+      entrypoint.R <filename> [<score_threshold>] [--debug] [--stderr]
 
       Options:
         --debug
+        --stderr
       "
 opt <- docopt::docopt(doc)
 
-# if (opt$debug) {
-#  print(opt)
-# }
+if (opt$debug) {
+ print("options: ")
+ print(opt)
+}
+
 
 if (is.null(opt$score_threshold)) opt$score_threshold <- 0.5
 
@@ -55,19 +60,21 @@ cli::cli_alert_info("now geocoding ...", wrap = TRUE)
 geocode <- function(addr_string) {
   stopifnot(class(addr_string) == "character")
 
-  stderrFn <- FALSE
+  stderrFn <- FALSE # must be FALSE or filename
 
-  if (opt$debug) {
+  if (opt$stderr) {
     stderrCnt <<- stderrCnt + 1
     stderrFn <- sprintf("%s/geoLog%d.log", dirname(opt$filename), stderrCnt)
+    print(sprintf("stderrFn %s", stderrFn))
     print(addr_string)
   }
+
 
   out <- system2("ruby",
     # args = c("/app/geocode.rb", shQuote(addr_string)),
     args = c(if (opt$debug) "./geocode.rb" else "/app/geocode.rb", shQuote(addr_string)),
-    # args = c(if (opt$debug) "./geocode.rb" else "./geocode.rb", shQuote(addr_string)),
     # stderr = FALSE,
+    # won't work with TRUE because it will be merged with stedout and fails when parsong as json
     stderr = stderrFn,
     stdout = TRUE
   )
@@ -86,14 +93,20 @@ geocode <- function(addr_string) {
   out
 }
 
+
+run_parallel <- !(opt$debug || opt$stderr)
+run_cache <- !(opt$debug || opt$stderr)
+
+print(sprintf("run parameters: parallel :%d, cache: %d", run_parallel, run_cache))
+
 # if any geocodes are returned, regardless of score_threshold...
 if (nrow(d_for_geocoding) > 0) {
   d_for_geocoding$geocodes <- mappp::mappp(d_for_geocoding$address,
                                            geocode,
                                           #  parallel = TRUE,
-                                           parallel = !TRUE,
+                                           parallel = run_parallel,
                                           #  cache = TRUE,
-                                           cache = !TRUE,
+                                           cache = run_cache,
                                            cache_name = "geocoding_cache"
   )
   

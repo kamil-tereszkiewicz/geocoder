@@ -7,6 +7,7 @@ require 'pathname'
 require_relative './database'
 
 db_path = ENV["GEOCODER_DB"] || ARGV[0]
+warn "missing geocoder.db path, either set GEOCODER_DB env variable or pass the path as first argument" if db_path.nil? or db_path.strip.empty?
 db_path = Pathname.new(db_path).cleanpath
 
 warn "db: #{db_path}"

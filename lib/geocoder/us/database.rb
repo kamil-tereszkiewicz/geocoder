@@ -133,7 +133,7 @@ module Geocoder::US
     # return the result as a list of hashes.
     def execute (sql, *params)
 
-      warn " __execute:\n  #{sql.inspect}\n  #{params.inspect}"
+      # warn " __execute:\n  #{sql.inspect}\n  #{params.inspect}"
 
       st = prepare(sql) 
       begin
@@ -194,6 +194,7 @@ module Geocoder::US
     end
 
     def _print_metaphones (label, params)
+      return
       metaphones = params.map.with_index{|_,i| " metaphone(?,5) t_" + i.to_s }.join ","
       sqlM = "select #{metaphones};"
 
@@ -262,7 +263,7 @@ module Geocoder::US
     # used to match results.
     def features_by_street_and_zip (street, tokens, zips)
 
-      warn "__ features_by_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
+      # warn "__ features_by_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
       sql, params = features_by_street(street, tokens)
       in_list = placeholders_for zips
@@ -275,7 +276,7 @@ module Geocoder::US
     # copy of features_by_street_and_zip but using norm_street
     def fetures_by_norm_and_clear_street_and_zip (street, tokens, zips)
 
-      warn "__ fetures_by_norm_and_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
+      # warn "__ fetures_by_norm_and_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
       sql, params = fetures_by_norm_and_clear_street(street, tokens)
       in_list = placeholders_for zips
@@ -311,7 +312,7 @@ module Geocoder::US
         sql += " AND (#{like_list})"
         params += zip3s
       end
-      warn "__ more_features_by_street_and_zip:"
+      # warn "__ more_features_by_street_and_zip:"
       execute sql, *params
     end
 
@@ -332,7 +333,7 @@ module Geocoder::US
           ORDER BY min(abs(fromhn - ?), abs(tohn - ?))
           LIMIT #{limit};"
       params += [number, number]
-      warn "__ ranges_by_feature:"
+      # warn "__ ranges_by_feature:"
       execute sql, *params
     end
 
@@ -340,7 +341,7 @@ module Geocoder::US
     def edges (edge_ids)
       in_list = placeholders_for edge_ids
       sql = "SELECT edge.* FROM edge WHERE edge.tlid IN (#{in_list})"
-      warn "__ edges"
+      # warn "__ edges"
       execute sql, *edge_ids
     end
 
@@ -354,7 +355,7 @@ module Geocoder::US
                     min(tohn)   AS from1, max(fromhn) AS to1
               FROM range WHERE tlid IN (#{in_list})
               GROUP BY tlid, side;"
-      warn "__ range_ends"
+      # warn "__ range_ends"
       execute(sql, *edge_ids).map {|r|
   if r[:flipped].to_i == 1
           r[:flipped] = true
@@ -398,7 +399,7 @@ module Geocoder::US
               AND f1.fid = a.fid AND f2.fid = b.fid
               AND f1.zip = f2.zip
               AND f1.paflag = 'P' AND f2.paflag = 'P';"
-      warn "__ intersections_by_fid"
+      # warn "__ intersections_by_fid"
         return execute sql
       ensure
         # flush_statements # the CREATE/DROP TABLE invalidates prepared statements
@@ -413,7 +414,7 @@ module Geocoder::US
     def primary_places (zips)
       in_list = placeholders_for zips
       sql = "SELECT * FROM place WHERE zip IN (#{in_list}) order by priority desc;"
-      warn "__ primary_places"
+      # warn "__ primary_places"
       execute sql, *zips
     end
 
@@ -446,6 +447,7 @@ module Geocoder::US
     end
 
     def _print_candidates (candidates) 
+      return
       warn "__ candidates:"
       if candidates == nil then
         warn "  nil"
@@ -476,7 +478,6 @@ module Geocoder::US
 
       # warn "__ find_candidates: places_by_city: city: #{city.inspect} | #{address.city_parts.inspect} | #{address.state.inspect}"
       places = places_by_city city, address.city_parts, address.state if places.empty?
-      # $stderr.puts "__ find_candidates: 1 places: #{places}"
       warn "__ find_candidates: 1 places: #{places.length}"
       _print_candidates places
       return [] if places.empty?
@@ -488,7 +489,7 @@ module Geocoder::US
       
       zips = unique_values places, :zip
 
-      warn "__ find_candidates: zips base on places: #{zips}"
+      # warn "__ find_candidates: zips base on places: #{zips}"
       street = address.street.sort {|a,b|a.length <=> b.length}[0]
       # candidates = features_by_street_and_zip street, address.street_parts, zips
 
@@ -537,7 +538,7 @@ module Geocoder::US
       end
 
       merge_rows! candidates, places, :zip
-      warn "__ find_candidates: 3 merged candidates and places by zip: #{candidates.length}"
+      # warn "__ find_candidates: 3 merged candidates and places by zip: #{candidates.length}"
 
       _print_candidates places
       _print_candidates candidates
@@ -880,11 +881,11 @@ module Geocoder::US
       return best_places(address, candidates, canonical_place) if candidates[0][:street].nil?
 
       score_candidates! address, candidates
-      warn " __ geocode_address: score places: "
+      # warn " __ geocode_address: score places: "
       _print_candidates candidates
 
       best_candidates! candidates 
-      warn " __ geocode_address: best_candidates:"
+      # warn " __ geocode_address: best_candidates:"
       _print_candidates candidates
     
       #candidates.sort {|a,b| b[:score] <=> a[:score]}.each {|candidate|

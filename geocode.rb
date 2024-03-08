@@ -13,7 +13,7 @@ db = Geocoder::US::Database.new(db_path)
 addr = ARGV[0]
 warn " __ addr: #{addr}"
 
-out = db.geocode(ARGV[0])
+out = db.geocode(addr)
 
 warn "\n\nOUT: #{out.inspect}\n"
 
