@@ -210,7 +210,7 @@ module Geocoder::US
     def expand_streets_full(streets)
       add = []
       streets.each do |street|
-        add |=  expand_street_with_map street, Name_Abbr
+        add |= expand_street_with_map street, Name_Abbr
       end
 
       add.flatten!
@@ -218,18 +218,22 @@ module Geocoder::US
         add |= expand_street_with_map street, Std_Abbr
       end
 
-      add.map! {|item| expand_numbers(item)}
+      add.map! { |item| expand_numbers(item) }
 
       add.flatten!
       add.uniq!
       add
     end
-    
+
     def expand_street_with_map(street, the_map)
-      re = /\s+|,|\n|,|\.|\t/ # TODO: make sure that this will cover all scenarios that old behaviour would.
+      # TODO: make sure that this will cover all scenarios that old behaviour would.
+      # re = /\s+|,|\n|,|\.|\t/
       add = []
-      street_words = street.split(re).map(&:strip)
+      street_words = street.split(the_map.regexp).map(&:strip)
+
       street_words.each do |word|
+        next if word.empty?
+
         the_word = the_map[word]&.downcase
         if the_word.nil? || the_word == word
           if add.empty?
@@ -265,7 +269,6 @@ module Geocoder::US
       must_have_elements.all? { |v| this_array.include? v }
     end
     ################################
-
 
     def expand_streets(street) # this is also used to expand cities after places_by_zip
       if !street.empty? && !street[0].nil?
@@ -303,16 +306,30 @@ module Geocoder::US
 
       # validation of new expand
       ok = includes_all tmp_streets, street
+      warn "🛣"
       warn "street: #{street.inspect}"
       warn "tmp_streets: #{tmp_streets.inspect}"
       if ok 
-        warn "the streets are at least as good"
+        if street.length == tmp_streets.length
+          warn "streets are equal"
+        else
+          tmp_streets_copy = tmp_streets.clone
+          tmp_streets_copy.delete_if {|s| street.include? s}
+          warn "tmp_streets are at least as good, additional tmp_streets: "
+          warn tmp_streets_copy.inspect
+        end
       else 
-        warn "🌋 --- the streets are missing some entries\nstreets: #{street.inspect}"
+        street_clone = street.clone
+        street_clone.delete_if {|s| tmp_streets.include? s}
+        warn "🌋 --- the tmp_streets are missing following entries:"
+        warn street_clone.inspect
       end 
+      warn "🛣"
       # end validation of new expand
 
-      street #TODO: return tmp_streets
+      # street #TODO: return tmp_streets
+      tmp_streets
+      # street
     end
 
     def street_parts
