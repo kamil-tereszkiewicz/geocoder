@@ -133,7 +133,7 @@ module Geocoder::US
     # return the result as a list of hashes.
     def execute (sql, *params)
 
-      # warn " __execute:\n  #{sql.inspect}\n  #{params.inspect}"
+      warn " __execute:\n  #{sql.inspect}\n  #{params.inspect}"
 
       st = prepare(sql) 
       begin
@@ -194,7 +194,6 @@ module Geocoder::US
     end
 
     def _print_metaphones (label, params)
-      return
       metaphones = params.map.with_index{|_,i| " metaphone(?,5) t_" + i.to_s }.join ","
       sqlM = "select #{metaphones};"
 
@@ -225,7 +224,7 @@ module Geocoder::US
     end
 
     # copy of features_by_street but using norm_street
-    def fetures_by_norm_and_clear_street (street, tokens)
+    def features_by_norm_and_clear_street (street, tokens)
       metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
 
       _print_metaphones "street", tokens
@@ -240,6 +239,25 @@ module Geocoder::US
           FROM feature
           WHERE clear_street_phone IN (#{metaphones})"
       params = [street, street, street, street] + tokens
+      return [sql, params]
+    end
+
+    def features_by_norm_and_street_or_clear_street (street, tokens)
+      metaphones = (["metaphone(?,5)"] * tokens.length).join(",")
+
+      _print_metaphones "street", tokens
+
+      sql = "
+        SELECT feature.*, levenshtein(?, norm_street) AS street_score, 
+        levenshtein(?, street) AS street_score_base, 
+        levenshtein(?, norm_street) AS street_score_norm,
+        street_phone base_street_phone,
+        street base_street,
+        ? tested_street, 1 via_n_c_street
+          FROM feature
+          WHERE 
+          (clear_street_phone IN (#{metaphones}) or street_phone IN (#{metaphones}))"
+      params = [street, street, street, street] + tokens + tokens
       return [sql, params]
     end
 
@@ -274,11 +292,24 @@ module Geocoder::US
     end
     
     # copy of features_by_street_and_zip but using norm_street
-    def fetures_by_norm_and_clear_street_and_zip (street, tokens, zips)
+    def features_by_norm_and_clear_street_and_zip (street, tokens, zips)
 
-      # warn "__ fetures_by_norm_and_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
+      # warn "__ features_by_norm_and_clear_street_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
 
-      sql, params = fetures_by_norm_and_clear_street(street, tokens)
+      sql, params = features_by_norm_and_clear_street(street, tokens)
+      in_list = placeholders_for zips
+      sql    += " AND feature.zip IN (#{in_list})"
+      params += zips
+
+      execute sql, *params
+    end
+
+    # copy of features_by_street_and_zip but using norm_street and or on street_phone and clear_street_phone
+    def features_by_norm_and_street_or_clear_street_phone_and_zip (street, tokens, zips)
+
+      # warn "__ features_by_norm_and_street_or_clear_street_phone_and_zip: #{street.inspect} | #{tokens.inspect} | #{zips.inspect}"
+
+      sql, params = features_by_norm_and_street_or_clear_street(street, tokens)
       in_list = placeholders_for zips
       sql    += " AND feature.zip IN (#{in_list})"
       params += zips
@@ -494,42 +525,44 @@ module Geocoder::US
       # candidates = features_by_street_and_zip street, address.street_parts, zips
 
       # _print_candidates candidates
-
       ##############################################################################################################
       if candidates.empty?
-        # TODO: could we use 'OR' on methaphone with street_phone and clear_street_phone in one of the queries?
-        # TODO: it is better to use clear_street_phone, or would it be better to use norm_street for this?
+      # this version uses `or` to combine results from street_phone and clear_street_phone
         tokens = address.street_parts
-        warn "__ find_candidates: using norm/clear street: #{tokens.inspect}"
+        warn "__ find_candidates: using base/norm/clear street: #{tokens.inspect}"
         # the norm_street supposed to improve scorring i.e. some values in the street column 
         # contains full words like "Point" where others use abbreviations like "PT", 
         # the norm_street unify this always using abbrevations (street extracted from the passed
         # address will most likely contain abbrevations)
-        candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips
+        candidates = features_by_norm_and_street_or_clear_street_phone_and_zip street, tokens, zips
         _print_candidates candidates
       end
 
-      ############################################################################################################## 2
-      # changed order between features_by_street_and_zip and fetures_by_norm_and_clear_street_and_zip
-      if candidates.empty?
-        tokens = address.street_parts
-        warn "__ find_candidates: using base street: #{tokens.inspect}"
-        # candidates = fetures_by_norm_and_clear_street_and_zip street, tokens, zips
-        candidates = features_by_street_and_zip street, tokens, zips
-        _print_candidates candidates
-      end
 
-      ############################################################################################################## 2
-      # if candidates.empty? 
-      # TODO: we may want to remove this, the where is the same as in the previous (fetures_by_norm_and_clear_street_and_zip) query,
-      # so either we don't enter this block if previous query returns any results or we also get empty results here. 
-      # What we could do is add second score and have two street scores one with street and one with norm_street.
-      # tokens = address.street_parts
-      # warn "__ find_candidates: 2.1.2 using clear street: #{tokens.inspect}"
-      # candidates = features_by_clear_street_and_zip street, tokens, zips
-      # _print_candidates candidates
+      # ##############################################################################################################
+      # if candidates.empty?
+      #   # TODO: could we use 'OR' on methaphone with street_phone and clear_street_phone in one of the queries?
+      #   # TODO: it is better to use clear_street_phone, or would it be better to use norm_street for this?
+      #   tokens = address.street_parts
+      #   warn "__ find_candidates: using norm/clear street: #{tokens.inspect}"
+      #   # the norm_street supposed to improve scorring i.e. some values in the street column 
+      #   # contains full words like "Point" where others use abbreviations like "PT", 
+      #   # the norm_street unify this always using abbrevations (street extracted from the passed
+      #   # address will most likely contain abbrevations)
+      #   candidates = features_by_norm_and_clear_street_and_zip street, tokens, zips
+      #   _print_candidates candidates
       # end
-      ##############################################################################################################
+
+      # ############################################################################################################## 2
+      # # changed order between features_by_street_and_zip and features_by_norm_and_clear_street_and_zip
+      # if candidates.empty?
+      #   tokens = address.street_parts
+      #   warn "__ find_candidates: using base street: #{tokens.inspect}"
+      #   # candidates = features_by_norm_and_clear_street_and_zip street, tokens, zips
+      #   candidates = features_by_street_and_zip street, tokens, zips
+      #   _print_candidates candidates
+      # end
+
 
       if candidates.empty?
         warn "__ find_candidates: using relaxed zip: #{candidates.length}"

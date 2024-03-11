@@ -85,11 +85,13 @@ end
 
 def drop_my_indexes(db)
   sql = "DROP INDEX IF EXISTS "
-  index_name = "feature_clear_street_phone_zip_idx"
+  index_names = ["feature_clear_street_phone_zip_idx", "feature_clear_or_street_phone_zip_idx"]
 
-  puts "dropping index: #{index_name}..."
-  db.execute "#{sql} #{index_name};"
-  puts "dropped index: #{index_name}"
+  index_names.each do |idx_name|
+    puts "dropping index: #{idx_name}..."
+    db.execute "#{sql} #{idx_name};"
+    puts "dropped index: #{idx_name}"
+  end
 
   # index_name = "feature_norm_street_zip_idx"
   #     puts "dropping index: #{index_name}..."
@@ -106,6 +108,11 @@ def add_my_indexes(db)
   db.execute sql
   puts "created index: #{index_name}"
 
+  index_name = "feature_clear_or_street_phone_zip_idx"
+  sql = "CREATE INDEX if not exists #{index_name} ON feature (clear_street_phone, street_phone, zip);"
+  puts "adding index: #{index_name}..."
+  db.execute sql
+  puts "created index: #{index_name}"
   # index_name = "feature_norm_street_zip_idx"
   #     sql = "CREATE INDEX if not exists #{index_name} ON feature (norm_street, zip);"
   #     puts "adding index: #{index_name}..."

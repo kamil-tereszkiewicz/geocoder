@@ -177,3 +177,6 @@ Style/RedundantFileExtensionInRequire:
 
 Metrics/BlockLength:
   Enabled: false
+
+Style/WordArray:
+  Enabled: false
