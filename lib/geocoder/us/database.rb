@@ -216,7 +216,8 @@ module Geocoder::US
         levenshtein(?, norm_street) AS street_score_norm,
         street_phone base_street_phone,
         street base_street,
-        ? tested_street
+        ? tested_street,
+        0 via_n_c_street
           FROM feature
           WHERE street_phone IN (#{metaphones})"
       params = [street, street, street, street] + tokens
@@ -235,7 +236,8 @@ module Geocoder::US
         levenshtein(?, norm_street) AS street_score_norm,
         street_phone base_street_phone,
         street base_street,
-        ? tested_street, 1 via_n_c_street
+        ? tested_street, 
+        1 via_n_c_street
           FROM feature
           WHERE clear_street_phone IN (#{metaphones})"
       params = [street, street, street, street] + tokens
@@ -253,7 +255,8 @@ module Geocoder::US
         levenshtein(?, norm_street) AS street_score_norm,
         street_phone base_street_phone,
         street base_street,
-        ? tested_street, 1 via_n_c_street
+        ? tested_street, 
+        2 via_n_c_street
           FROM feature
           WHERE 
           (clear_street_phone IN (#{metaphones}) or street_phone IN (#{metaphones}))"
@@ -522,12 +525,18 @@ module Geocoder::US
 
       # warn "__ find_candidates: zips base on places: #{zips}"
       street = address.street.sort {|a,b|a.length <=> b.length}[0]
+      # // TODO: try avoid 1 char strings (happens e.g. when home no. is like: W231N1440)
+      if street.length < 2 && address.street.size > 1
+        tmp_street = address.street.sort {|a,b|a.length <=> b.length}.find {|x| x.length > 1}
+        street = tmp_street if tmp_street.length > street.length
+      end
+
       # candidates = features_by_street_and_zip street, address.street_parts, zips
 
       # _print_candidates candidates
       ##############################################################################################################
       if candidates.empty?
-      # this version uses `or` to combine results from street_phone and clear_street_phone
+        # this version uses `or` to combine results from street_phone and clear_street_phone
         tokens = address.street_parts
         warn "__ find_candidates: using base/norm/clear street: #{tokens.inspect}"
         # the norm_street supposed to improve scorring i.e. some values in the street column 
@@ -562,6 +571,7 @@ module Geocoder::US
       #   candidates = features_by_street_and_zip street, tokens, zips
       #   _print_candidates candidates
       # end
+      # ############################################################################################################## 2
 
 
       if candidates.empty?
