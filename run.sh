@@ -27,11 +27,11 @@ echo "old files cleared, generating..."
 # find . -type f -name "*.csv" -exec chmod 777 {} \;
 # find . -type f -name "*.log" -exec chmod 777 {} \;
 
-cmd_str="./entrypoint.R ${folder}$1 all --debug ${warningsIntoStderr}"
+# cmd_str="./entrypoint.R ${folder}$1 all --debug ${warningsIntoStderr}"
 # cmd_str="./entrypoint.R "${folder}$1" all ${warningsIntoStderr}"
 # cmd_str="./entrypoint.R "${folder}$1" --debug"
 # cmd_str="./entrypoint.R "${folder}$1"
-# cmd_str="./entrypoint.R "${folder}$1" all"
+cmd_str="./entrypoint.R "${folder}$1" all"
 
 echo COMMAND: ${cmd_str}
 

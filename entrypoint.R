@@ -72,7 +72,8 @@ geocode <- function(addr_string) {
 
   out <- system2("ruby",
     # args = c("/app/geocode.rb", shQuote(addr_string)),
-    args = c(if (opt$debug) "./geocode.rb" else "/app/geocode.rb", shQuote(addr_string)),
+    args = c("./geocode.rb", shQuote(addr_string)),
+    # args = c(if (opt$debug) "./geocode.rb" else "/app/geocode.rb", shQuote(addr_string)),
     # stderr = FALSE,
     # won't work with TRUE because it will be merged with stedout and fails when parsong as json
     stderr = stderrFn,

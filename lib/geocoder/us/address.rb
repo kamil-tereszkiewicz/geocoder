@@ -179,16 +179,6 @@ module Geocoder::US
         @prenum = @number = @sufnum = ""
       end
 
-      # FIXME: special case: Name_Abbr gets a bit aggressive
-      # about replacing St with Saint. exceptional case:
-      # Sault Ste. Marie
-
-      # FIXME: PO Box should geocode to ZIP
-      @street = text.scan(Match[:street])
-      @street = expand_streets(@street)
-      # SPECIAL CASE: 1600 Pennsylvania 20050
-      @street << @full_state if @street.empty? and @state.downcase != @full_state.downcase # i guess there is no point to push abbr of a state as street
- 
       @city = text.scan(Match[:city])
       if !@city.empty?
         @city = [@city[-1].strip]
@@ -204,6 +194,38 @@ module Geocoder::US
       # TODO: kt: we are adding state here - unnecessary in some cases, it looks like it happen when we pass full state in the address?
       # @city << @full_state if @state.downcase != @full_state.downcase
       @city << @full_state if @city.empty? && @state.downcase != @full_state.downcase # added check city.empty
+
+      # FIXME: special case: Name_Abbr gets a bit aggressive
+      # about replacing St with Saint. exceptional case:
+      # Sault Ste. Marie
+
+      # FIXME: PO Box should geocode to ZIP
+      @street = text.scan(Match[:street])
+
+      ################# TODO: start: removal of city if possible with minimal risc
+      # TODO: if we always pass address with commas, then we could accept only the first element 
+      #       from @street array, as the second one would be city. Looking at city parsing
+      #       they assume that sity is last element, so either street+city if no commast or
+      #       other delimeters were found or just city if text.scan could split correctly.
+
+      # TODO: is doesn't work when home number is like W100 because the w end up in the street array
+      if @street.size > 1 &&
+        !@number.empty? &&
+        !@zip.empty? &&
+        !@street[0].strip.empty? &&
+        text.include?(',') &&
+        !@city.empty? &&
+        @city[0].downcase == @street[@street.size-1].downcase
+
+        warn "popping: #{@street[@street.size-1]}"
+        @street.pop 
+      end
+      ################# TODO: end
+
+      @street = expand_streets(@street)
+      # SPECIAL CASE: 1600 Pennsylvania 20050
+      @street << @full_state if @street.empty? and @state.downcase != @full_state.downcase # i guess there is no point to push abbr of a state as street
+ 
     end
     
     ################################ // test new expand_streets
