@@ -60,7 +60,8 @@ RUN apt-get update && apt-get install -y \
 # RUN ruby --version
 ## end for ruby version
 
-RUN gem install sqlite3 json Text
+RUN gem install sqlite3 -v 1.4.4 
+RUN gem install json Text
 
 # install required version of renv
 RUN R --quiet -e "install.packages('remotes', repos = 'https://packagemanager.rstudio.com/all/__linux__/focal/latest')"

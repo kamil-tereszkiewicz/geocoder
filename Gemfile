@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'debug', require: false
+gem 'haml'
 gem 'json'
 gem "rackup", require: false
 gem 'rubocop', require: false

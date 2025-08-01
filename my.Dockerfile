@@ -2,7 +2,7 @@ FROM localhost/myfromgeo
 
 ARG geo_db
 
-RUN if [  -z $geo_db ];then \
+RUN if [ -z $geo_db ];then \
   >&2 echo  "\n****************Warning!*************\n";\
   >&2 echo "Argument geo_db is empty, use --build-arg geo_db=../geocoder.db\n" ;\
   >&2 exit 1;\

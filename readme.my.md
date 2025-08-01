@@ -82,6 +82,12 @@ find . -type f -name "*" -exec chmod 777 {} \;
 Check version of ruby that is running inside container, or run any other executable with args (place the arguments after image name (last))
 
 ```bash
-$ podman run -it --entrypoint ruby --rm mygeo:latest --version
-$ podman run -it --entrypoint ruby --rm mygeo:latest /app/lib/geocoder/us/rest.rb
+podman run -it --entrypoint ruby --rm mygeo:latest --version
+podman run -it --entrypoint ruby --rm mygeo:latest /app/lib/geocoder/us/rest.rb
+```
+
+Run locally the rest server
+
+```bash
+ruby ./lib/geocoder/us/rest.rb ../geocoder.db
 ```
